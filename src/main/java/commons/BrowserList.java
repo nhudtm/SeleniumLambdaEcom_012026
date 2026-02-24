@@ -1,0 +1,5 @@
+package commons;
+
+public enum BrowserList {
+    CHROME, FIREFOX, EDGE, HFIREFOX, SAFARI, HEDGE, HCHROME, MOBILE_SAFARI, MOBILE_CHROME
+}

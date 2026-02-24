@@ -1,0 +1,108 @@
+package pageObjects;
+
+import utils.DBUtils;
+import models.Product;
+import org.openqa.selenium.WebDriver;
+import pageUIs.CompareUI;
+
+import java.util.List;
+
+public class ComparePO extends MenuCategoryPO {
+   
+
+    public ComparePO(WebDriver driver) {
+        super(driver);
+    }
+
+    public boolean isCompareTitleDisplayed() {
+        waitForElementVisible(  pageUIs.CompareUI.COMPARE_PAGE_TITLE);
+        return isElementDisplayed(  pageUIs.CompareUI.COMPARE_PAGE_TITLE);
+    }
+
+    public int getNumberOfProductsInComparePage() {
+        waitForAllElementsVisible(  CompareUI.All_PRODUCTS);
+        return getElementList(  CompareUI.All_PRODUCTS).size();
+    }
+
+    public int getProductIdByName(String productName) {
+        waitForElementVisible(  CompareUI.DYNAMIC_PRODUCT_BY_NAME, productName);
+        String productURL = getElementDOMAttribute(  CompareUI.DYNAMIC_PRODUCT_BY_NAME, "href", productName);
+        return Integer.parseInt(productURL.split("product_id=")[1].split("&")[0]);
+    }
+
+    public String getProductPrice(int productIndex) {
+        waitForElementVisible(  CompareUI.DYNAMIC_PRODUCT_PRICE_BY_INDEX, String.valueOf(productIndex));
+        return getElementText(  CompareUI.DYNAMIC_PRODUCT_PRICE_BY_INDEX, String.valueOf(productIndex));
+
+    }
+
+    public List<String> getProductMediaSrcFromDB(int productId) {
+        return DBUtils.getProductMediaSrc(productId);
+    }
+
+    public int getProductIdByIndex(int j) {
+        waitForElementVisible(  CompareUI.DYNAMIC_PRODUCT_BY_INDEX, String.valueOf(j));
+        String productURL = getElementDOMAttribute(  CompareUI.DYNAMIC_PRODUCT_BY_INDEX, "href", String.valueOf(j));
+        return Integer.parseInt(productURL.split("product_id=")[1].split("&")[0]);
+    }
+
+    public String getProductImageSrcByIndex(int j) {
+        waitForElementVisible(  CompareUI.DYNAMIC_IMAGE_BY_INDEX, String.valueOf(j));
+        return getElementDOMAttribute(  CompareUI.DYNAMIC_IMAGE_BY_INDEX, "src", String.valueOf(j));
+    }
+
+    public Product getProductInfoFromDB(int productId) {
+        return DBUtils.getProductInfoById(productId);
+    }
+
+    public void clickRemoveProductByIndex(int numOfProduct) {
+        waitForElementClickable(  CompareUI.DYNAMIC_REMOVE_BUTTON_BY_INDEX, String.valueOf(numOfProduct));
+        clickToElement(  CompareUI.DYNAMIC_REMOVE_BUTTON_BY_INDEX , String.valueOf(numOfProduct));
+        sleepInSecond(2);
+    }
+
+    public boolean isNoProductMessageDisplayed() {
+        waitForElementVisible(  CompareUI.NO_PRODUCT_MESSAGE_TEXT);
+        return isElementDisplayed(  CompareUI.NO_PRODUCT_MESSAGE_TEXT);
+
+    }
+
+    public String getSuccessMessageText() {
+        waitForElementVisible(  CompareUI.SUCCESS_MESSAGE);
+        return getElementText(  CompareUI.SUCCESS_MESSAGE);
+    }
+
+    public String getProductNameByIndex(int index) {
+        waitForElementVisible(  CompareUI.DYNAMIC_PRODUCT_NAME_BY_INDEX, String.valueOf(index));
+        return getElementText(  CompareUI.DYNAMIC_PRODUCT_NAME_BY_INDEX, String.valueOf(index));
+    }
+
+    public boolean isFirstProductInComparePageRemoved(int firstProductIdInCollectionPopular) {
+        int firstProductIdInComparePage = getProductIdByIndex(1);
+        return firstProductIdInCollectionPopular != firstProductIdInComparePage;
+    }
+
+    public void clickAddToCartByIndex(int i) {
+        waitForElementClickable(  CompareUI.DYNAMIC_ADD_TO_CART_BUTTON_BY_INDEX, String.valueOf(i));
+        clickToElement(  CompareUI.DYNAMIC_ADD_TO_CART_BUTTON_BY_INDEX, String.valueOf(i));
+        sleepInSecond(2);
+    }
+
+//    public String getProductNameInAddToCartPopup() {
+//        waitForElementVisible(  CompareUI.PRODUCT_NAME_IN_ADD_TO_CART_POPUP);
+//        return getElementText(  CompareUI.PRODUCT_NAME_IN_ADD_TO_CART_POPUP);
+//    }
+//
+//    public String getProductPriceInAddToCartPopup() {
+//        waitForElementVisible(  CompareUI.PRODUCT_PRICE_IN_ADD_TO_CART_POPUP);
+//        return getElementText(  CompareUI.PRODUCT_PRICE_IN_ADD_TO_CART_POPUP);
+//    }
+//
+//    public int getProductIdInAddToCartPopup() {
+//        waitForElementVisible(  CompareUI.PRODUCT_LINK_IN_ADD_TO_CART_POPUP);
+//        String productURL = getElementAttribute(  CompareUI.PRODUCT_LINK_IN_ADD_TO_CART_POPUP, "href");
+//        return Integer.parseInt(productURL.split("product_id=")[1].split("&")[0]);
+//    }
+
+
+}

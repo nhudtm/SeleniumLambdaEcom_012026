@@ -1,0 +1,17 @@
+# Configuration Template
+# Copy this file to config.properties and fill in your actual values
+# config.properties is in .gitignore and will not be committed to git
+
+# Jira Configuration
+jira.site.url=https://automationtest.atlassian.net
+jira.username=your-email@example.com
+jira.api.key=YOUR_JIRA_API_KEY_HERE
+jira.project.key=SCRUM
+
+# BrowserStack Configuration
+browserstack.username=YOUR_BROWSERSTACK_USERNAME
+browserstack.access.key=YOUR_BROWSERSTACK_ACCESS_KEY
+
+# Application URL
+dev.url=https://ecommerce-playground.lambdatest.io
+

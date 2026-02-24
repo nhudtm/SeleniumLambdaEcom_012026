@@ -1,0 +1,40 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="Lambda Ecommerce">
+    <parameter name="url" value="https://ecommerce-playground.lambdatest.io/index.php?route=common/home"/>
+    <test name="Run on Chrome">
+        <parameter name="browser" value="chrome"/>
+<!--        <groups>-->
+<!--            <run>-->
+<!--                <include name="retest"/>-->
+<!--            </run>-->
+<!--        </groups>-->
+
+        <classes>
+<!--            <class name="tests.TC_MenuCategory"/>-->
+<!--            <class name="tests.TC_Home"/>-->
+            <class name="tests.CrawData"/>
+<!--            <class name="tests.TC_ProductDetail_1"/>-->
+<!--            <class name="tests.TC_MegaMenu"/>-->
+<!--            <class name="tests.TC_Search"/>-->
+        </classes>
+    </test>
+    <!--    <test name="Run on Firefox">-->
+    <!--        <parameter name="browser" value="firefox"/>-->
+    <!--        <classes>-->
+    <!--            <class name="tests.TC_Home"/>-->
+    <!--        </classes>-->
+    <!--    </test>-->
+    <!--    <test name="Run on Safari">-->
+    <!--        <parameter name="browser" value="safari"/>-->
+    <!--        <classes>-->
+    <!--            <class name="tests.TC_Home"/>-->
+    <!--        </classes>-->
+    <!--    </test>-->
+    <!--    <test name="Run on Headless Chrome">-->
+    <!--        <parameter name="browser" value="hchrome"/>-->
+    <!--        <classes>-->
+    <!--            <class name="tests.TC_Home"/>-->
+    <!--        </classes>-->
+    <!--    </test>-->
+</suite>

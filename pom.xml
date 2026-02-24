@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.restAssured</groupId>
+    <artifactId>LambdaEcommerce</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Global variable for dependencies -->
+        <selenium.version>4.28.1</selenium.version>
+        <testng.version>7.10.2</testng.version>
+        <!--        Aspectj dùng để chạy song song (parallel) với ThreadLocal-->
+        <aspectj.version>1.9.22</aspectj.version>
+        <allure.version>2.28.0</allure.version>
+        <extent.version>5.1.2</extent.version>
+        <log4j2.version>2.24.3</log4j2.version>
+        <reportng.version>1.1.4</reportng.version>
+        <jira.version>0.5</jira.version>
+
+        <!--Tạo biến tạm nếu run bằng command line không truyền tham số -
+        Vd: mvn test thì măc định sẽ run env = TEST-->
+        <!--Nếu run 'mvn test -Denvironment=TEST' thì sẽ ghi đè lên biến này và sẽ run file runOnTEST-->
+        <environment>TEST</environment>
+    </properties>
+
+    <!-- Add allure-bom to dependency management to ensure correct versions of all the dependencies are used -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-bom</artifactId>
+                <version>${allure.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Quản lí thư viện -->
+    <dependencies>
+        <!-- TestNG -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.hamcrest</groupId>-->
+<!--                    <artifactId>hamcrest-core</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+        </dependency>
+
+        <!-- Selenium Java -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+
+        <!--        Appium-->
+        <dependency>
+            <groupId>io.appium</groupId>
+            <artifactId>java-client</artifactId>
+            <version>9.5.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-remote-driver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-support</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--        ReportNG-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.uncommons</groupId>-->
+        <!--            <artifactId>reportng</artifactId>-->
+        <!--            <version>${reportng.version}</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+
+        <!--        extent report-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.aventstack</groupId>-->
+        <!--            <artifactId>extentreports</artifactId>-->
+        <!--            <version>${extent.version}</version>-->
+        <!--        </dependency>-->
+
+        <!--        log4j v2-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+        <!--        Velocity dùng để tạo file html cho reportNG, cân nhắc việc bỏ bớt-->
+        <!--        <dependency>-->
+        <!--            <groupId>velocity</groupId>-->
+        <!--            <artifactId>velocity-dep</artifactId>-->
+        <!--            <version>1.4</version>-->
+        <!--        </dependency>-->
+
+        <!--        ReportNG , có thể bỏ-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.google.inject</groupId>-->
+        <!--            <artifactId>guice</artifactId>-->
+        <!--            <version>4.1.0</version>-->
+        <!--        </dependency>-->
+
+        <!--     API logging -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <!--        Dùng để xử lý file, vd: copy file, xóa file, ...-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.14.0</version>
+        </dependency>
+
+        <!--        Allure report-->
+        <!--        Không cần version vì đã khai báo trong dependencyManagement-->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-java-commons</artifactId>
+            <!--            <version>2.24.0</version>-->
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <!--            <version>${allure.version}</version>-->
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-attachments</artifactId>
+            <!--            <version>2.27.0</version>-->
+        </dependency>
+
+        <!-- AspectJ dùng để hỗ trợ chạy song song (parallel) với ThreadLocal -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Jira, exclude httpclient vì nó gây xung đột với rest assured -->
+<!--        <dependency>-->
+<!--            <groupId>net.rcarz</groupId>-->
+<!--            <artifactId>jira-client</artifactId>-->
+<!--            <version>0.5</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.apache.httpcomponents</groupId>-->
+<!--                    <artifactId>httpclient</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/net.datafaker/datafaker -->
+        <dependency>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.javafaker</groupId>-->
+        <!--            <artifactId>javafaker</artifactId>-->
+        <!--            <version>1.0.1</version>-->
+        <!--        </dependency>-->
+
+        <!-- For json data-->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.4.0</version>
+            <!--            <scope>test</scope>-->
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.hamcrest</groupId>-->
+<!--            <artifactId>hamcrest</artifactId>-->
+<!--            <version>2.2</version>-->
+<!--        </dependency>-->
+
+        <!-- dùng để hỗ trợ rest assured-->
+        <!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+
+
+        <!-- Excel file-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.4.0</version>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.browserstack</groupId>-->
+        <!--            <artifactId>browserstack-java-sdk</artifactId>-->
+        <!--            <version>LATEST</version>-->
+        <!--            <scope>compile</scope>-->
+        <!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.3.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>12.8.1.jre11</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc11</artifactId>
+            <version>21.9.0.0</version>
+        </dependency>
+
+        <!--        Cucumber-->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>6.10.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-core</artifactId>
+            <version>6.10.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>gherkin</artifactId>
+            <version>17.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>6.10.2</version>
+        </dependency>
+
+        <!-- (Optional) SLF4J binding to remove the "NOP" logger warning -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.7</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- Compiler/ Run Test -->
+    <build>
+        <plugins>
+            <!-- Compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <!-- Compiler code vs Java 17 -->
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+
+            <!-- Run test -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <!-- Run TestNG xml file -->
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <suiteXmlFiles>
+                        <!-- <suiteXmlFile>src/test/resources/runOn${environment}.xml</suiteXmlFile>-->
+                        <suiteXmlFile>src/test/resources/runOn${environment}.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <!-- Argument -->
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                        <!--                        Dòng này gây lỗi khi run report allure-->
+                        <!--                            -javaagent:${com.browserstack:browserstack-java-sdk:jar}-->
+                    </argLine>
+                </configuration>
+            </plugin>
+
+            <!--            // Mới thêm-->
+            <!--            <plugin>-->
+            <!--                <groupId>io.qameta.allure</groupId>-->
+            <!--                <artifactId>allure-maven</artifactId>-->
+            <!--                <version>2.15.0</version>-->
+            <!--                <configuration>-->
+            <!--                    <reportVersion>${allure.version}</reportVersion>-->
+            <!--                    <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
+
+            <!--BrowserStack-->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>getClasspathFilenames</id>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--            Automatic download ChromeDriver for Appium Android testing-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <artifactId>exec-maven-plugin</artifactId>-->
+            <!--                <version>3.1.0</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>download-chromedriver</id>-->
+            <!--                        <phase>generate-resources</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>exec</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <executable>bash</executable>-->
+            <!--                            <arguments>-->
+            <!--                                <argument>${project.basedir}/scripts/download-chromedriver.sh</argument>-->
+            <!--                                <argument>emulator-5554</argument> &lt;!&ndash; hoặc thiết bị thật &ndash;&gt;-->
+            <!--                            </arguments>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+        </plugins>
+    </build>
+</project>
