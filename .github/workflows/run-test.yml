@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ "master", "main" ]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -21,7 +26,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Run TC_Filter_ProductCategory in Headless Chrome
+    - name: Run tests in Headless Chrome
       env:
         BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
         BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
@@ -29,17 +34,27 @@ jobs:
         JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
         JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }}
         JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
-      # Sử dụng temp_run.xml vì trong đó đã setup sẵn Test Class là TC_Filter_ProductCategory, browserName là hchrome và url
       run: mvn clean test -Dsurefire.suiteXmlFiles=temp_run.xml
 
     - name: Generate Allure Report
       if: always()
       run: mvn allure:report
 
-    - name: Upload Allure Report as Artifact
+    - name: Upload Pages Artifact
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-pages-artifact@v3
       with:
-        name: allure-report
         path: target/site/allure-maven-plugin
-        retention-days: 7
+
+  deploy-allure-pages:
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
