@@ -156,6 +156,12 @@ public class BaseTest {
             case HCHROME:
                 driver = new HChromeDriverManager().getBrowserDriver();
                 break;
+            case HFIREFOX:
+                driver = new HFirefoxDriverManager().getBrowserDriver();
+                break;
+            case HEDGE:
+                driver = new HEdgeDriverManager().getBrowserDriver();
+                break;
             case SAFARI:
                 driver = new SafariDriverManager().getBrowserDriver();
                 break;
@@ -167,6 +173,9 @@ public class BaseTest {
             //do nothing
         } else {
             driver.manage().window().maximize();
+            if (browserName.toLowerCase().startsWith("h")) {
+                driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
+            }
         }
         driver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         return driver;
@@ -192,6 +201,9 @@ public class BaseTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         if (!browserName.toLowerCase().contains("mobile")) {
             driver.manage().window().maximize();
+            if (browserName.toLowerCase().startsWith("h")) {
+                driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
+            }
         }
         driver.get(url);
         return driver;
@@ -277,6 +289,9 @@ public class BaseTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         if (!browserName.toLowerCase().contains("mobile")) {
             driver.manage().window().maximize();
+            if (browserName.toLowerCase().startsWith("h")) {
+                driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
+            }
         }
         driver.get(url);
         return driver;
@@ -449,7 +464,7 @@ public class BaseTest {
 //        closeBrowserDriver3();
 //    }
 
-    //chatGPT
+
 //    @AfterSuite(alwaysRun = true)
 //    public void killRemainingDrivers() {
 //        try {

@@ -360,16 +360,16 @@
                 </configuration>
             </plugin>
 
-            <!--            // Mới thêm-->
-            <!--            <plugin>-->
-            <!--                <groupId>io.qameta.allure</groupId>-->
-            <!--                <artifactId>allure-maven</artifactId>-->
-            <!--                <version>2.15.0</version>-->
-            <!--                <configuration>-->
-            <!--                    <reportVersion>${allure.version}</reportVersion>-->
-            <!--                    <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
+            <!-- Mới thêm -->
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.10.0</version>
+                <configuration>
+                    <reportVersion>${allure.version}</reportVersion>
+                    <resultsDirectory>${project.basedir}/allure-results</resultsDirectory>
+                </configuration>
+            </plugin>
 
             <!--BrowserStack-->
             <plugin>

@@ -1,4 +1,6 @@
-# LambdaEcommerceRefactor
+# Selenium Automation test - LambdaEcommerce Website
+
+[![Execute Selenium UI Tests](https://github.com/nhudtm/SeleniumLambdaEcom_012026/actions/workflows/run-test.yml/badge.svg)](https://github.com/nhudtm/SeleniumLambdaEcom_012026/actions/workflows/run-test.yml)
 
 Project: Automated UI tests for a sample e-commerce site (Lambda Ecommerce) using Selenium WebDriver and TestNG, organized with the Page Object Model.
 
@@ -92,6 +94,35 @@ If you run tests from an IDE, use the TestNG runner or the test class/method run
 - Ensure the correct Java JDK is installed (11+). Check `pom.xml` for exact source/target levels.
 - Chrome/Firefox drivers should be managed by the project's driver managers or set via environment variables if necessary.
 - If you see flaky failures around carousels or dynamic content, try running with a single thread (disable parallel runs) and enable screenshots on failure for debugging.
+
+---
+
+## Implemented Functionalities
+
+The test suite covers the following core e-commerce functionalities:
+
+**User Account & Authentication:**
+- User Registration (including cross-device testing with iOS/Android and BrowserStack)
+- User Login (including SoftAssert approaches)
+- My Account management
+
+**Product Navigation & Discovery:**
+- Home page component interactions and Mega Menu navigation
+- Category page navigation and Pagination
+- Product Search functionality
+- Product Filtering (by Category and Special criteria)
+- Blog and Special product pages
+
+**Product Interactions:**
+- Product detail page views and actions
+- Add to Cart from various locations (Home, Category, Product Detail)
+- Add to Wishlist (including cookie-based testing)
+- Product Comparisons (capacity limits, deductions)
+
+**Cart Operations & Ordering:**
+- Cart management (adding/removing products, quantity updates)
+- Calculation validations (Subtotal, Tax, Total)
+- Buy Now / Checkout flows
 
 ---
 

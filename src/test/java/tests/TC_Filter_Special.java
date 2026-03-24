@@ -63,7 +63,7 @@ public class TC_Filter_Special extends BaseTest {
     }
 
 
-    @Test(dataProvider = "priceRanges")
+    @Test(dataProvider = "priceRanges", dataProviderClass = dataProviders.FilterDataProviders.class)
     public void TC_Verify_Filter_Price_Success() {
         String minPrice = "130";
         String maxPrice = "1500";

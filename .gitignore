@@ -59,4 +59,5 @@ SECRET_SCAN_REPORT.md
 allure-results/
 allure-report/
 test-output/
-surefire-reports/
+# Allure CLI downloaded by allure-maven plugin
+.allure/
