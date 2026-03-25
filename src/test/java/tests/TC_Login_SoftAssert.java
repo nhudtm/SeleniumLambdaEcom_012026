@@ -28,8 +28,8 @@ public class TC_Login_SoftAssert extends BaseTest {
     protected MyAccountPO myAccount;
 
 
-    String email = PropertiesConfig.getProp("email");
-    String password = PropertiesConfig.getProp("password");
+    String email = PropertiesConfig.getProp("test.email");
+    String password = PropertiesConfig.getProp("test.password");
 
     @Parameters({"env", "browserName", "browserVersion", "os", "osVersion", "url"})
     @BeforeClass(alwaysRun = true)

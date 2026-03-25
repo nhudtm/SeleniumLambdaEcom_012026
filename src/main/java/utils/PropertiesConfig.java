@@ -43,6 +43,14 @@ public class PropertiesConfig {
         return normalizeValue(value);
     }
 
+    public static String getRequiredProp(String key) {
+        String value = getProp(key);
+        if (value == null || value.isBlank()) {
+            throw new IllegalStateException("Missing required config key: '" + key + "'. Please define it in system properties, environment variables, or src/test/resources/config.properties.");
+        }
+        return value;
+    }
+
     private static String normalizeKey(String key) {
         return key.toUpperCase().replaceAll("[^A-Z0-9]", "_");
     }

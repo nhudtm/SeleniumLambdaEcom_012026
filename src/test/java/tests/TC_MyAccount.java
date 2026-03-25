@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+
 import commons.AuthMessages;
 import commons.BaseTest;
 import io.qameta.allure.Description;
@@ -25,8 +26,8 @@ public class TC_MyAccount extends BaseTest {
     protected HomePO homePage;
     protected MyAccountPO myAccount;
 
-    String email = PropertiesConfig.getProp("email");
-    String password = PropertiesConfig.getProp("password");
+    String email = PropertiesConfig.getRequiredProp("test.email");
+    String password = PropertiesConfig.getRequiredProp("test.password");
 
     @Parameters({"env", "browserName", "browserVersion", "os", "osVersion", "url"})
     @BeforeClass(alwaysRun = true)

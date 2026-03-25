@@ -1,22 +1,27 @@
 package tests;
 
-import utils.LoginHelper;
-import utils.PropertiesConfig;
-import commons.BaseTest;
-import components.ProductComponent;
+import java.util.List;
+import java.util.Set;
+
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestContext;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-import pageObjects.*;
 
-import java.util.List;
-import java.util.Set;
+import commons.BaseTest;
+import components.ProductComponent;
+import pageObjects.CartPO;
+import pageObjects.ComparePO;
+import pageObjects.HomePO;
+import pageObjects.MyAccountPO;
+import pageObjects.PageGenerator;
+import pageObjects.WishListPO;
+import utils.LoginHelper;
+import utils.PropertiesConfig;
 
 public class TC_WishList_Cookie extends BaseTest {
     WebDriver driver;
@@ -38,8 +43,8 @@ public class TC_WishList_Cookie extends BaseTest {
         log.info(
                 "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     
-        email = PropertiesConfig.getProp("email");
-        password = PropertiesConfig.getProp("password");
+        email = PropertiesConfig.getProp("test.email");
+        password = PropertiesConfig.getProp("test.password");
 
         // use cookie here for login state, but the website does not allow to add cookie, so we have to login with UI
         LoginHelper.login(homePage,email,password);

@@ -1,57 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-
-<suite name="Lambda Ecommerce">
+<suite name="Lambda Ecommerce Playground" parallel="tests" thread-count="2">
     <listeners>
-                <listener class-name="reportConfig.AllureTestListener"/>
-                <listener class-name="listeners.AnnotationTransformer"/>
-                
+        <listener class-name="reportConfig.AllureTestListener"/>
+        <listener class-name="listeners.AnnotationTransformer"/>
+        <listener class-name="jiraConfig.JiraListener"/>
     </listeners>
-    <parameter name="url" value="https://ecommerce-playground.lambdatest.io"/>
-    <test name="Run on Chrome">
+    <test name="Run on Headless Chrome">
         <parameter name="browserName" value="hchrome"/>
         <parameter name="env" value="local"/>
+        <parameter name="url" value="https://ecommerce-playground.lambdatest.io"/>
+        <groups>
+            <run>
+                <include name="regression"/>
+            </run>
+        </groups>
+      
         <classes>
-                       <class name="tests.TC_MenuCategory"/>
-                       <class name="tests.TC_Home"/>
-                       <class name="tests.TC_Filter_ProductCategory"/>
-                       <class name="tests.TC_ProductDetail_1"/>
-                       <class name="tests.TC_MegaMenu"/>
-                       <class name="tests.TC_Search"/>
-                       <class name="tests.TC_Login"/>
-                       <class name="tests.TC_Compare"/>
-                       <class name="tests.TC_Cart"/>
-                       <class name="tests.TC_Register"/>
-                       <class name="tests.TC_ProductActionFromCategory"/>
-                       <class name="tests.TC_ProductActionFromHome"/>
-                       <class name="tests.TC_Pagination"/>
-                       <class name="tests.TC_WishList"/>
-                       <class name="tests.TC_ProductCategory"/>
-        </classes>
-
-    </test>
-
-    <!-- <test name="Run on Firefox">
-        <parameter name="browserName" value="hfirefox"/>
-        <parameter name="env" value="local"/>
-        <classes>
-            <class name="tests.TC_MenuCategory"/>
             <class name="tests.TC_Home"/>
-            <class name="tests.TC_Filter_ProductCategory"/>
-            <class name="tests.TC_Filter_Special"/>
-            <class name="tests.TC_ProductDetail_1"/>
-            <class name="tests.TC_ProductDetail_2"/>
+            <class name="tests.TC_MenuCategory"/>
+            <class name="tests.TC_Filter_ProductCategory"/> 
+            <class name="tests.TC_ProductDetail_2"/> 
             <class name="tests.TC_MegaMenu"/>
             <class name="tests.TC_Search"/>
-            <class name="tests.TC_Login"/>
+            <class name="tests.TC_MyAccount"/>
             <class name="tests.TC_Compare"/>
             <class name="tests.TC_Cart"/>
-            <class name="tests.TC_Login"/>
             <class name="tests.TC_Register"/>
             <class name="tests.TC_ProductActionFromCategory"/>
             <class name="tests.TC_ProductActionFromHome"/>
             <class name="tests.TC_Pagination"/>
-            <class name="tests.TC_WishList_Cookie"/>
-            <class name="tests.TC_ProductCategory"/>
+            <class name="tests.TC_WishList"/>
+             <class name="tests.TC_ProductCategory"/>
         </classes>
-    </test> -->
+    </test>
+    <test name="Run on Headless Firefox">
+        <parameter name="browserName" value="hfirefox"/>
+        <parameter name="env" value="local"/>
+        <parameter name="url" value="https://ecommerce-playground.lambdatest.io"/>
+        <groups>
+            <run>
+                <include name="regression"/>
+            </run>
+        </groups>
+      
+        <classes>
+            <class name="tests.TC_Home"/>
+            <class name="tests.TC_MenuCategory"/>
+            <class name="tests.TC_Filter_ProductCategory"/> 
+            <class name="tests.TC_ProductDetail_2"/> 
+            <class name="tests.TC_MegaMenu"/>
+            <class name="tests.TC_Search"/>
+            <class name="tests.TC_MyAccount"/>
+            <class name="tests.TC_Compare"/>
+            <class name="tests.TC_Cart"/>
+            <class name="tests.TC_Register"/>
+            <class name="tests.TC_ProductActionFromCategory"/>
+            <class name="tests.TC_ProductActionFromHome"/>
+            <class name="tests.TC_Pagination"/>
+            <class name="tests.TC_WishList"/>
+             <class name="tests.TC_ProductCategory"/>
+        </classes>
+    </test>
 </suite>
+
+<!-- use to run on github action -->

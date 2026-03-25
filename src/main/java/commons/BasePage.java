@@ -1,18 +1,25 @@
 package commons;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.Color;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import pageUIs.BasePageUI;
-
 import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.Color;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import pageUIs.BasePageUI;
 
 public class BasePage {
     protected WebDriver driver  ;
@@ -160,12 +167,18 @@ public class BasePage {
     }
 
     public void sendKeyToElement( String locator, String textValue) {
+        if (textValue == null) {
+            throw new IllegalArgumentException("Input textValue must not be null. Locator: " + locator);
+        }
         WebElement element = getElement( locator);
         element.clear();
         element.sendKeys(textValue);
     }
 
     public void sendKeyToElement( String locator, String textValue, String... params) {
+        if (textValue == null) {
+            throw new IllegalArgumentException("Input textValue must not be null. Locator: " + castParameter(locator, params));
+        }
         WebElement element = getElement( castParameter(locator, params));
         element.clear();
         element.sendKeys(textValue);

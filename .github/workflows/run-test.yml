@@ -26,6 +26,16 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Validate required test secrets
+      env:
+        TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+        TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+      run: |
+        if [ -z "$TEST_EMAIL" ] || [ -z "$TEST_PASSWORD" ]; then
+          echo "Missing required secrets: TEST_EMAIL and/or TEST_PASSWORD"
+          exit 1
+        fi
+
     - name: Run regression tests on Chrome and Firefox
       env:
         BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
@@ -37,7 +47,7 @@ jobs:
         DEV_URL: ${{ secrets.DEV_URL }}
         TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
         TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-      run: mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/runONACTION.xml
+      run: mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/runOnPROD.xml -Dtest.email="${{ secrets.TEST_EMAIL }}" -Dtest.password="${{ secrets.TEST_PASSWORD }}"
 
     - name: Generate Allure Report
       if: always()

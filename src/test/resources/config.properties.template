@@ -15,3 +15,7 @@ browserstack.access.key=YOUR_BROWSERSTACK_ACCESS_KEY
 # Application URL
 dev.url=https://ecommerce-playground.lambdatest.io
 
+# Test Account
+test.email=your-test-email@example.com
+test.password=YOUR_TEST_PASSWORD
+

@@ -4,7 +4,15 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
-import pageObjects.*;
+
+import pageObjects.CartPO;
+import pageObjects.ComparePO;
+import pageObjects.HomePO;
+import pageObjects.MenuCategoryPO;
+import pageObjects.MyAccountPO;
+import pageObjects.PageGenerator;
+import pageObjects.ProductDetailPO;
+import pageObjects.WishListPO;
 import utils.PropertiesConfig;
 
 public class Login extends BaseTest {
@@ -24,8 +32,8 @@ public class Login extends BaseTest {
     public void beforeTest(String browser, String url) {
         driver = getBrowserDriver(browser, url);
         homePage = PageGenerator.getHomepage(driver);
-        email = PropertiesConfig.getProp("email");
-        password = PropertiesConfig.getProp("password");
+        email = PropertiesConfig.getProp("test.email");
+        password = PropertiesConfig.getProp("test.password");
 
         // This website does not allow to add cookies, so we have to login with UI in before class of Test classes.
         // Or we can run this Login test class before running other test class to have login state

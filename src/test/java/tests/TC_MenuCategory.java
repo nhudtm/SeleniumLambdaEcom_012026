@@ -1,15 +1,29 @@
 package tests;
 
-import commons.BaseTest;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestContext;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-import pageObjects.*;
+
+import commons.BaseTest;
+import pageObjects.AddOnsDesignsPO;
+import pageObjects.AddOnsModulesPO;
+import pageObjects.AddOnsWidgetPO;
+import pageObjects.BlogPO;
+import pageObjects.CartPO;
+import pageObjects.ComparePO;
+import pageObjects.HomePO;
+import pageObjects.MenuCategoryPO;
+import pageObjects.MyAccountPO;
+import pageObjects.PageGenerator;
+import pageObjects.ProductCategoryPO;
+import pageObjects.ProductDetailPO;
+import pageObjects.RegisterPO;
+import pageObjects.SpecialPO;
+import pageObjects.WishListPO;
 
 public class TC_MenuCategory extends BaseTest {
     protected WebDriver driver;
@@ -107,8 +121,8 @@ public class TC_MenuCategory extends BaseTest {
 
     @Test
     public void TC_14_Access_WishList_Page_With_Login(){
-        String email = utils.PropertiesConfig.getProp("email");
-        String password = utils.PropertiesConfig.getProp("password");
+        String email = utils.PropertiesConfig.getProp("test.email");
+        String password = utils.PropertiesConfig.getProp("test.password");
         myAccountPage = homePage.clickMyAccountMenuItem();
         myAccountPage.inputToEmailTextbox(email);
         myAccountPage.inputToPasswordTextbox(password);
