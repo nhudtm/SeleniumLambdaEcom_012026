@@ -61,3 +61,6 @@ allure-report/
 test-output/
 # Allure CLI downloaded by allure-maven plugin
 .allure/
+
+### Files
+COMPREHENSIVE_CODE_REVIEW.md

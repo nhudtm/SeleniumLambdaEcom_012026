@@ -1,4 +1,4 @@
-package tests;
+package tests.mobile;
 
 import utils.DataFaker;
 import commons.BaseTest;
@@ -56,7 +56,6 @@ public class TC_Register_iOS_parallel extends BaseTest {
     public void TC_01_Register_Blank_Data() {
         myAccount = homepage.clickMyAccount();
         registerPO = myAccount.clickContinueButton();
-
         registerPO.clickToContinueButtonAtResigterPage();
         Assert.assertEquals(registerPO.getErrorMessage("First Name"),"First Name must be between 1 and 32 characters!");
         Assert.assertEquals(registerPO.getErrorMessage("Last Name"),"Last Name must be between 1 and 32 characters!");
@@ -74,7 +73,6 @@ public class TC_Register_iOS_parallel extends BaseTest {
     public void TC_02_Register_FirstName_Blank() {
         myAccount = homepage.clickMyAccount();
         registerPO = myAccount.clickContinueButton();
-
         registerPO.inputToLastNameTextbox(lastName);
         registerPO.inputToEmailTextbox(email);
         registerPO.inputToPhoneTextbox(phone);

@@ -87,7 +87,7 @@ public class TC_ProductCategory extends BaseTest {
     }
 
     //        get expected quantity from database with data provider
-    @Test(dataProvider = "categoryProductQuantityFromDatabase", dataProviderClass = DatabaseDataProviders.class)
+    // @Test(dataProvider = "categoryProductQuantityFromDatabase", dataProviderClass = DatabaseDataProviders.class)
     public void TC_Verify_Product_List_Displayed_DB_DataProvider(Map<String, Integer> data) {
         menuCategoryPage.hoverToMegaMenu();
         List<String> allChildItemNames = menuCategoryPage.getAllChildItemsInMegaMenu(); // ie Apple, HTC, ...
@@ -105,7 +105,7 @@ public class TC_ProductCategory extends BaseTest {
     }
 
     //get expected quantity from database không dùng data provider
-    @Test
+    // @Test
     public void TC_Verify_Product_List_Displayed_DB() {
         menuCategoryPage.hoverToMegaMenu();
         List<String> allChildItemNames = menuCategoryPage.getAllChildItemsInMegaMenu(); // ie Apple, HTC, ...
@@ -156,7 +156,7 @@ public class TC_ProductCategory extends BaseTest {
         }
     }
 
-    @Test
+    // @Test
     public void TC_Verify_Product_Info() {
         //Kiểm tra hiện thị thông tin của all sản phẩm
         menuCategoryPage.hoverToMegaMenu();

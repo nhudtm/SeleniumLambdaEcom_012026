@@ -1,13 +1,17 @@
 package components;
 
-import commons.BasePage;
-import org.openqa.selenium.*;
+import java.time.Duration;
+
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pageUIs.ProductActionComponentUI;
 
-import java.time.Duration;
+import commons.BasePage;
+import pageUIs.ProductActionComponentUI;
 
 public class ProductComponent extends BasePage {
 
@@ -28,23 +32,30 @@ public class ProductComponent extends BasePage {
     }
 
     public void hoverToProduct() {
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOf(productElement));
-        Actions action = new Actions(driver);
-        action.moveToElement(productElement).perform();
+        try {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", productElement);
+            new Actions(driver).moveToElement(productElement).perform();
+        } catch (WebDriverException e) {
+            ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].dispatchEvent(new MouseEvent('mouseover', {bubbles:true}));",
+                    productElement);
+        }
     }
 
     public void clickAddToCart() {
-        //click by js: Khong can hover van click duoc
-        sleepInSecond(3);
-        WebElement button = productElement.findElement(getByLocator(ProductActionComponentUI.ADD_TO_CART_BUTTON));
-//        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", button);
-//        sleepInSecond(3);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", button);
-        sleepInSecond(3);
+        hoverToProduct();
 
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOf(button));
-//
-        button.click();
+        try {
+            WebElement button = productElement.findElement(getByLocator(ProductActionComponentUI.ADD_TO_CART_BUTTON));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", button);
+            new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOf(button));
+            new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(button));
+            button.click();
+        } catch (WebDriverException e) {
+            WebElement button = productElement.findElement(getByLocator(ProductActionComponentUI.ADD_TO_CART_BUTTON));
+            hoverToProduct();
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
+        }
 
         //Use selenium - Tuy nhien element bi che nen khong click duoc
 //        WebElement image = new WebDriverWait(driver, Duration.ofSeconds(10))

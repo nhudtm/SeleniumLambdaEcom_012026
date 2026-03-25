@@ -1,13 +1,15 @@
 package commons;
 
-//import com.browserstack.utils.BrowserStackDriverMap;
-import factoryBrowser.*;
-import factoryEnvironment.BrowserStackFactory;
-import factoryEnvironment.LocalFactory;
-import factoryEnvironment.MobileFactory;
-import listeners.VerificationFailures;
-import models.Product;
-import models.ProductMedia;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -19,15 +21,20 @@ import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeSuite;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
+//import com.browserstack.utils.BrowserStackDriverMap;
+import factoryBrowser.ChromeDriverManager;
+import factoryBrowser.EdgeDriverManager;
+import factoryBrowser.FirefoxDriverManager;
+import factoryBrowser.HChromeDriverManager;
+import factoryBrowser.HEdgeDriverManager;
+import factoryBrowser.HFirefoxDriverManager;
+import factoryBrowser.SafariDriverManager;
+import factoryEnvironment.BrowserStackFactory;
+import factoryEnvironment.LocalFactory;
+import factoryEnvironment.MobileFactory;
+import listeners.VerificationFailures;
+import models.Product;
+import models.ProductMedia;
 
 
 public class BaseTest {
@@ -301,16 +308,18 @@ public class BaseTest {
     //Close driver basic
     public void closeBrowserDriver() {
         String cmd = null;
+        String browserName = null;
         try {
             if (driver == null) {
                 log.warn("closeBrowserDriver called but driver is null");
                 return;
             }
+
             String osName = System.getProperty("os.name");
             log.info("osName = " + osName);
             String browserDriverInstanceName = driver.toString().toLowerCase();
             log.info("browserDriverInstanceName = " + browserDriverInstanceName);
-            String browserName = null;
+
             if (browserDriverInstanceName.contains("chrome")) {
                 browserName = "chromedriver";
             } else if (browserDriverInstanceName.contains("firefox")) {
@@ -322,39 +331,53 @@ public class BaseTest {
             }
 
             // close driver
-            if (driver != null) {
-                driver.quit();
+            try {
+                driver.manage().deleteAllCookies();
+            } catch (Exception e) {
+                log.warn("Could not delete browser cookies before quit: {}", e.getMessage());
             }
+            driver.quit();
+            log.info("WebDriver quit successfully");
 
             // kill driver instance
-            if (osName.contains("windows")) {
-                cmd = "taskkill /F /FI \"IMAGENAME eq " + browserName + "*\"";
+            if (browserName != null) {
+                if (osName.toLowerCase().contains("windows")) {
+                    cmd = "taskkill /F /FI \"IMAGENAME eq " + browserName + "*\"";
+                } else {
+                    cmd = "pkill " + browserName;
+                }
+
+                Process p = Runtime.getRuntime().exec(cmd);
+                int exitCode = p.waitFor();
+                log.info("Driver process cleanup command exit code: {}", exitCode);
             } else {
-                cmd = "pkill " + browserName;
+                log.warn("Could not determine browser driver process name from instance string: {}", browserDriverInstanceName);
             }
-            Process p = Runtime.getRuntime().exec(cmd);
-            p.waitFor();
 
         } catch (Exception e) {
             log.error("Exception while closing browser driver", e);
+        } finally {
+            driver = null;
         }
     }
 
     // Dùng cho Environment Factory Pattern (threadlocal)
     public void closeBrowserDriver2() {
-        if (tDriver.get() == null) {
+        WebDriver threadDriver = tDriver.get();
+        if (threadDriver == null) {
             log.warn("closeBrowserDriver2 called but tDriver.get() is null");
             return;
         }
-        System.out.println("Thread ID = " + Thread.currentThread().getId() + " - " + tDriver.get().toString());
+        log.info("Thread ID = {} - Driver = {}", Thread.currentThread().getId(), threadDriver);
 
         String cmd = null;
+        String browserName = null;
         try {
             String osName = System.getProperty("os.name");
             log.info("osName = " + osName);
-            String browserDriverInstanceName = tDriver.get().toString().toLowerCase();
+            String browserDriverInstanceName = threadDriver.toString().toLowerCase();
             log.info("browserDriverInstanceName = " + browserDriverInstanceName);
-            String browserName = null;
+
             if (browserDriverInstanceName.contains("chrome")) {
                 browserName = "chromedriver";
             } else if (browserDriverInstanceName.contains("firefox")) {
@@ -365,31 +388,34 @@ public class BaseTest {
                 browserName = "safaridriver";
             }
 
-            // kill driver instanc
+            try {
+                threadDriver.manage().deleteAllCookies();
+            } catch (Exception e) {
+                log.warn("Could not delete browser cookies before quit (thread {}): {}",
+                        Thread.currentThread().getId(), e.getMessage());
+            }
+
+            threadDriver.quit();
+            log.info("Thread-local WebDriver quit successfully for thread {}", Thread.currentThread().getId());
+
             if (browserName != null) {
-                if (osName.contains("windows")) {
+                if (osName.toLowerCase().contains("windows")) {
                     cmd = "taskkill /F /FI \"IMAGENAME eq " + browserName + "*\"";
                 } else {
                     cmd = "pkill " + browserName;
                 }
-                if (tDriver != null) {
-                    tDriver.get().manage().deleteAllCookies();
-                    tDriver.get().quit();
-                    tDriver.remove();
-                }
+                Process process = Runtime.getRuntime().exec(cmd);
+                int exitCode = process.waitFor();
+                log.info("Thread {} driver process cleanup command exit code: {}", Thread.currentThread().getId(), exitCode);
             } else {
-                log.warn("Browser name could not be determined from driver instance");
+                log.warn("Browser name could not be determined from driver instance: {}", browserDriverInstanceName);
             }
         } catch (Exception e) {
             log.error("Exception while closing thread-local browser driver", e);
         } finally {
-            if (cmd != null) {
-                try {
-                    Process process = Runtime.getRuntime().exec(cmd);
-                    process.waitFor();
-                } catch (IOException | InterruptedException e) {
-                    log.error("Error executing OS command: ", e);
-                }
+            tDriver.remove();
+            if (Thread.currentThread().isInterrupted()) {
+                log.warn("Thread {} was interrupted during driver cleanup", Thread.currentThread().getId());
             }
         }
     }

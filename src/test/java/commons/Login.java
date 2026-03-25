@@ -26,13 +26,12 @@ public class Login extends BaseTest {
         email = "lazy@gmail.com";
         password = "123456";
 
-        // use cookie
+        // This website does not allow to add cookies, so we have to login with UI in before class of Test classes.
+        // Or we can run this Login test class before running other test class to have login state
         MyAccountPO myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
-
-
     }
 
     @AfterTest

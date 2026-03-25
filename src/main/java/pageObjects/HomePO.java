@@ -1,16 +1,17 @@
 package pageObjects;
 
-import components.ProductComponent;
-import org.openqa.selenium.WebDriver;
-import pageUIs.HomeUI;
-
 import java.util.List;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import components.ProductComponent;
+import pageUIs.HomeUI;
 
 public class HomePO extends MenuCategoryPO {
 
     public HomePO(WebDriver driver) {
         super(driver);
-
     }
 
     public boolean isHomeSliderDisplayed() {
@@ -131,6 +132,7 @@ public class HomePO extends MenuCategoryPO {
     }
 
     public void hoverToProductInCollectionPopular(int productIndex) {
+        scrollToProductInCollectionPopular(productIndex);
         waitForElementVisible(HomeUI.DYNAMIC_COLLECTION_PRODUCT, String.valueOf(productIndex));
         hoverToElement(HomeUI.DYNAMIC_COLLECTION_PRODUCT, String.valueOf(productIndex));
         sleepInSecond(2);
@@ -176,16 +178,26 @@ public class HomePO extends MenuCategoryPO {
     public List<ProductComponent> getAllProductsInTopProducts() {
         waitForAllElementPresence(HomeUI.PRODUCTS_IN_TOP_PRODUCTS);
         List<ProductComponent> products = getElementList(HomeUI.PRODUCTS_IN_TOP_PRODUCTS).stream()
-                .map(product -> new ProductComponent(driver, product)).toList();
+            .filter(this::isVisibleNonDuplicateSlide)
+            .map(product -> new ProductComponent(driver, product))
+            .toList();
         return products;
     }
 
     public List<ProductComponent> getAllProductsInTopCollections() {
         waitForAllElementPresence(HomeUI.PRODUCTS_IN_TOP_COLLECTIONS);
         List<ProductComponent> products = getElementList(HomeUI.PRODUCTS_IN_TOP_COLLECTIONS).stream()
-                .map(product -> new ProductComponent(driver, product)).toList();
+            .filter(this::isVisibleNonDuplicateSlide)
+            .map(product -> new ProductComponent(driver, product))
+            .toList();
         return products;
     }
+
+        private boolean isVisibleNonDuplicateSlide(WebElement product) {
+            String classNames = product.getDomAttribute("class");
+        boolean duplicateSlide = classNames != null && classNames.contains("swiper-slide-duplicate");
+        return product.isDisplayed() && !duplicateSlide;
+        }
 
     public WishListPO clickWishlistLinkInWishlistPopup() {
         waitForElementClickable(HomeUI.WISHLIST_POPUP_PRODUCT_WISHLIST_BUTTON);

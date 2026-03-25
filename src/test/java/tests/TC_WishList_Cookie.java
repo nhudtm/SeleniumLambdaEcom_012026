@@ -27,7 +27,7 @@ public class TC_WishList_Cookie extends BaseTest {
     Set<Cookie> cookies;
 
 
-    @Parameters({"browser", "url"})
+    @Parameters({"browserName", "url"})
     @BeforeClass
     public void beforeClass(String browser, String url) {
         driver = getBrowserDriver(browser, url);
@@ -36,7 +36,7 @@ public class TC_WishList_Cookie extends BaseTest {
         email = "lazy@gmail.com";
         password = "123456";
 
-        // use cookie
+        // use cookie here for login state, but the website does not allow to add cookie, so we have to login with UI
         LoginHelper.login(homePage,email,password);
         homePage.sleepInSecond(5);
     }
@@ -52,27 +52,27 @@ public class TC_WishList_Cookie extends BaseTest {
         int numOfProduct = 1;
         addProductToWishLIstAndVerifyPopup(numOfProduct);
     }
-//
-//
-//
-//    @Test
-//    public void TC_02_Add_To_WishList_Popup_2_Products() {
-//        int numOfProduct = 2;
-//        //Login
-//        myAccount = homePage.clickMyAccountMenuItem();
-//        myAccount.inputToEmailTextbox(email);
-//        myAccount.inputToPasswordTextbox(password);
-//        myAccount.clickLoginButton();
-//
-//        //Go to wishlist page and remove all product if have
-//        wishListPage = myAccount.clickWishListIconWithLoggedIn();
-//        removeAllProductInWishList();
-//
-//        //Go to home page to add product to wishlist and verify popup
-//        homePage = wishListPage.clickHomeMenuItem();
-//        addProductToWishLIstAndVerifyPopup(numOfProduct);
-//
-//    }
+
+
+
+   @Test
+   public void TC_02_Add_To_WishList_Popup_2_Products() {
+       int numOfProduct = 2;
+       //Login
+       myAccount = homePage.clickMyAccountMenuItem();
+    //    myAccount.inputToEmailTextbox(email);
+    //    myAccount.inputToPasswordTextbox(password);
+    //    myAccount.clickLoginButton();
+
+       //Go to wishlist page and remove all product if have
+       wishListPage = myAccount.clickWishListIconWithLoggedIn();
+       removeAllProductInWishList();
+
+       //Go to home page to add product to wishlist and verify popup
+       homePage = wishListPage.clickHomeMenuItem();
+       addProductToWishLIstAndVerifyPopup(numOfProduct);
+
+   }
 
 
 //    @Test

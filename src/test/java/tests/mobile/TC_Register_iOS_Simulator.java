@@ -1,4 +1,4 @@
-package tests;
+package tests.mobile;
 
 import utils.DataFaker;
 import commons.BaseTest;

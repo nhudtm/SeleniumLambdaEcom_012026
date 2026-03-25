@@ -25,7 +25,7 @@ public class TC_ProductActionFromHome extends BaseTest {
 
 
     @Parameters({"browserName", "url"})
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void beforeClass(String browser, String url) {
         driver = getBrowserDriver(browser, url);
         homePage = PageGenerator.getHomepage(driver);

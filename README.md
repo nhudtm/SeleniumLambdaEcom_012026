@@ -200,6 +200,8 @@ Each test case maps to Test classes under `src/test/java/tests`.
 
 ## Known flakiness & troubleshooting tips
 
+- Note: This e-commerce website is inherently flaky for UI automation because many images/icons are lazy-loaded and rendered asynchronously; visual and clickable states can change between runs.
+- Note: Test cases should be written independently, with each test owning its own setup/teardown and avoiding shared state or cross-test dependencies.
 - Carousel / swiper elements (Home collections): these are often lazy-initialized or partially visible; tests that interact with a specific slide by index can be flaky when the slide isn't in the current viewport.
   - Workarounds: ensure the collection/tab is activated before interacting; scroll the slider into view; use JS to bring target slide into view or click carousel controls.
 - Add-to-cart popup: if the popup appears but Selenium reports element not visible, capture a screenshot and page source on failure to inspect DOM differences.

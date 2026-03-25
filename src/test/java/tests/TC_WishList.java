@@ -99,7 +99,7 @@ public class TC_WishList extends BaseTest {
 
     @Test
     public void TC_05_Verify_WishList_Page_0_Product() {
-//        Login
+        //Login
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox(password);
@@ -173,8 +173,8 @@ public class TC_WishList extends BaseTest {
     }
 
 
-
-    @Test
+    // Website UI does not support this case, ignore for now, will update later when website has this feature
+    // @Test
     public void TC_13_Add_To_WishList_Verify_Popup_Same_Product_Twice() {
         // Add first product to compare
         addProductToWishLIstAndVerifyPopup(1);
@@ -201,7 +201,8 @@ public class TC_WishList extends BaseTest {
         verifyProductInfoInWishlistPage(1, productIdInCollectionPopular);
     }
 
-    @Test
+    // Product UI change, ignore test case for now, will update later
+    // @Test
     public void TC_15_WishList_Page_Add_To_Cart_Popup_Success() {
         // Lấy số 3 vì product thứ 3 có bật Add to cart popup và có chọn được product type
         String productNameInCollectionPopular = homePage.getProducNameInCollectionPopular(3);

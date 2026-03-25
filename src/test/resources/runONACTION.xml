@@ -2,11 +2,11 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Temp Suite">
     <test name="Run on Headless Chrome">
-        <parameter name="browserName" value="hchrome"/>
+        <parameter name="browserName" value="chrome"/>
         <parameter name="env" value="local"/>
         <parameter name="url" value="https://ecommerce-playground.lambdatest.io"/>
         <classes>
-            <class name="tests.TC_Filter_ProductCategory"/>
+            <class name="tests.TC_Register"/>
         </classes>
     </test>
 </suite>

@@ -182,6 +182,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+
         <!-- Jira, exclude httpclient vì nó gây xung đột với rest assured -->
 <!--        <dependency>-->
 <!--            <groupId>net.rcarz</groupId>-->

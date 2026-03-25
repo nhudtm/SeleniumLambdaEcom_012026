@@ -1,5 +1,6 @@
 package pageObjects;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import pageUIs.CartUI;
 
@@ -87,5 +88,15 @@ public class CartPO extends MenuCategoryPO {
     public  String getGrandTotalPrice() {
         waitForElementVisible(  CartUI.GRAND_TOTAL);
         return getElementText(  CartUI.GRAND_TOTAL);
+    }
+
+    public void clickRemoveProductByNumber(int numOfProduct) {
+        waitForElementClickable(  CartUI.DYNAMIC_REMOVE_BUTTON_IN_CART_PAGE, String.valueOf(numOfProduct));
+        clickToElement(  CartUI.DYNAMIC_REMOVE_BUTTON_IN_CART_PAGE , String.valueOf(numOfProduct));
+        sleepInSecond(2);
+    }
+
+    public void pressEnter(int index){
+        pressKeyToElement(CartUI.DYNAMIC_PRODUCT_QUANTITY_IN_CART_PAGE, Keys.ENTER, String.valueOf(index));
     }
 }

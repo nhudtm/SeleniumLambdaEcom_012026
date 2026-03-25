@@ -34,7 +34,7 @@ jobs:
         JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
         JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }}
         JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
-      run: mvn clean test -Dsurefire.suiteXmlFiles=temp_run.xml
+      run: mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/runONACTION.xml
 
     - name: Generate Allure Report
       if: always()

@@ -38,12 +38,12 @@ public class FilterComponent extends BasePage {
     }
 
     public void filterBySize(String id) {
-        waitForElementVisible(  FilterUI.DYNAMIC_SIZE_FILTER_OPTION_BY_ID, id);
-        clickToElementByJS(  FilterUI.DYNAMIC_SIZE_FILTER_OPTION_BY_ID,id);
+        waitForElementVisible(FilterUI.DYNAMIC_SIZE_FILTER_OPTION_BY_ID, id);
+        clickToElementByJS(FilterUI.DYNAMIC_SIZE_FILTER_OPTION_BY_ID,id);
     }
 
     public boolean isSizeSelected(String id) {
-        waitForElementVisible(  FilterUI.DYNAMIC_SIZE_FILTER_OPTION_BY_ID, id);
-        return isElementSelected(  FilterUI.DYNAMIC_SIZE_FILTER_OPTION_BY_ID, id);
+        waitForElementVisible(FilterUI.DYNAMIC_SIZE_FILTER_OPTION_BY_ID, id);
+        return isElementSelected(FilterUI.DYNAMIC_SIZE_FILTER_OPTION_BY_ID, id);
     }
 }
