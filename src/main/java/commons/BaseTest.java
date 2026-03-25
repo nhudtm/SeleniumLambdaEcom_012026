@@ -305,7 +305,7 @@ public class BaseTest {
     }
 
 
-    //Close driver basic
+    //Close driver basic (local not thread)
     public void closeBrowserDriver() {
         String cmd = null;
         String browserName = null;
