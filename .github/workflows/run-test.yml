@@ -26,7 +26,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Run tests in Headless Chrome
+    - name: Run regression tests on Chrome and Firefox
       env:
         BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
         BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
@@ -34,6 +34,9 @@ jobs:
         JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
         JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }}
         JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+        DEV_URL: ${{ secrets.DEV_URL }}
+        TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+        TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
       run: mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/runONACTION.xml
 
     - name: Generate Allure Report
