@@ -41,8 +41,12 @@ build/
 
 ### Sensitive Configuration ###
 config.properties
+deviceConfig.properties
 **/config.properties
 src/test/resources/config.properties
+.env
+.env.*
+credential.*
 
 ### Logs (may contain secrets) ###
 log/

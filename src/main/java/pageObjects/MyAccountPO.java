@@ -5,11 +5,8 @@ import org.openqa.selenium.WebDriver;
 import pageUIs.MyAccountUI;
 
 public class MyAccountPO extends MenuCategoryPO {
-
-
     public MyAccountPO(WebDriver driver) {
         super(driver);
-
     }
 
     @Step("Click to Continue button to go to register page")

@@ -11,7 +11,7 @@ public class TC_AddOns extends BaseTest {
     WebDriver driver;
 
     @Parameters({"browser", "url"})
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void beforeClass(String browser, String url) {
         driver = getBrowserDriver(browser, url);
     }

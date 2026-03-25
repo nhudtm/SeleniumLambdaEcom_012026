@@ -1,16 +1,26 @@
 package tests;
 
-import commons.BaseTest;
-import components.ProductComponent;
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-import pageObjects.*;
 
-import java.util.List;
+import commons.BaseTest;
+import components.ProductComponent;
+import pageObjects.CartPO;
+import pageObjects.ComparePO;
+import pageObjects.HomePO;
+import pageObjects.MyAccountPO;
+import pageObjects.PageGenerator;
+import pageObjects.WishListPO;
+import utils.PropertiesConfig;
 
 public class TC_WishList extends BaseTest {
     WebDriver driver;
@@ -22,84 +32,78 @@ public class TC_WishList extends BaseTest {
     MyAccountPO myAccount;
     String email, password;
 
-    @Parameters({"browserName", "url"})
-    @BeforeMethod
-    public void beforeClass(String browser, String url) {
+    @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        homePage = PageGenerator.getHomepage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
 
-        driver = getBrowserDriver(browser, url);
-        homePage = PageGenerator.getHomepage(driver);
-        email = "lazy@gmail.com";
-        password = "123456";
-
-
+        email = PropertiesConfig.getProp("email");
+        password = PropertiesConfig.getProp("password");
     }
 
-    @Test
+    @Test(groups = { "regression", "wishlist" })
     public void TC_01_Add_To_WishList_Popup_1_Product() {
-        //Login
+        // Login
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
 
-        //Go to wishlist page and remove all product if have
+        // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();
         removeAllProductInWishList();
 
-        //Go to home page to add product to wishlist and verify popup
+        // Go to home page to add product to wishlist and verify popup
         homePage = wishListPage.clickHomeMenuItem();
         int numOfProduct = 1;
         addProductToWishLIstAndVerifyPopup(numOfProduct);
-
-
     }
-
-
 
     @Test
     public void TC_02_Add_To_WishList_Popup_2_Products() {
         int numOfProduct = 2;
-        //Login
+        // Login
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
 
-        //Go to wishlist page and remove all product if have
+        // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();
         removeAllProductInWishList();
 
-        //Go to home page to add product to wishlist and verify popup
+        // Go to home page to add product to wishlist and verify popup
         homePage = wishListPage.clickHomeMenuItem();
         addProductToWishLIstAndVerifyPopup(numOfProduct);
 
     }
-
 
     @Test
     public void TC_03_Add_To_WishList_Popup_4_Product() {
         int numOfProduct = 4;
-        //Login
+        // Login
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
 
-        //Go to wishlist page and remove all product if have
+        // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();
         removeAllProductInWishList();
 
-        //Go to home page to add product to wishlist and verify popup
+        // Go to home page to add product to wishlist and verify popup
         homePage = wishListPage.clickHomeMenuItem();
         addProductToWishLIstAndVerifyPopup(numOfProduct);
 
-
     }
-
 
     @Test
     public void TC_05_Verify_WishList_Page_0_Product() {
-        //Login
+        // Login
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox(password);
@@ -108,26 +112,25 @@ public class TC_WishList extends BaseTest {
         wishListPage = homePage.clickWishListIconWithLoggedIn();
         removeAllProductInWishList();
         Assert.assertTrue(wishListPage.isNoProductMessageDisplayed());
-        Assert.assertEquals(wishListPage.getNoProductMessage(), "No results!");
+        Assert.assertEquals(wishListPage.getNoProductMessage().trim(), "No results!");
         homePage = wishListPage.clickHomeMenuItem();
     }
-
 
     @Test
     public void TC_06_Verify_WishList_Page_1_Product() {
         int numOfProduct = 1;
 
-        //Login
+        // Login
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
 
-        //Go to wishlist page and remove all product if have
+        // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();
         removeAllProductInWishList();
 
-        //Go to home page to add product to wishlist and verify popup
+        // Go to home page to add product to wishlist and verify popup
         homePage = wishListPage.clickHomeMenuItem();
         addProductToWishlistAndVerifyWishlistPage(numOfProduct);
     }
@@ -136,27 +139,27 @@ public class TC_WishList extends BaseTest {
     public void TC_07_Verify_WishList_Page_4_Product() {
         int numOfProduct = 4;
 
-        //Login
+        // Login
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
 
-        //Go to wishlist page and remove all product if have
+        // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();
         removeAllProductInWishList();
 
-        //Go to home page to add product to wishlist and verify popup
+        // Go to home page to add product to wishlist and verify popup
         homePage = wishListPage.clickHomeMenuItem();
         addProductToWishlistAndVerifyWishlistPage(numOfProduct);
     }
 
-//
-//    @Test
-//    public void TC_09_WishList_Page_Remove_1_Product() {
-//        int numOfProduct = 1;
-//
-//    }
+    //
+    // @Test
+    // public void TC_09_WishList_Page_Remove_1_Product() {
+    // int numOfProduct = 1;
+    //
+    // }
 
     @Test
     public void TC_10_WishList_Page_Remove_3_Product() {
@@ -172,14 +175,15 @@ public class TC_WishList extends BaseTest {
         removeProductFromCompare(numOfProduct);
     }
 
-
-    // Website UI does not support this case, ignore for now, will update later when website has this feature
+    // Website UI does not support this case, ignore for now, will update later when
+    // website has this feature
     // @Test
     public void TC_13_Add_To_WishList_Verify_Popup_Same_Product_Twice() {
         // Add first product to compare
         addProductToWishLIstAndVerifyPopup(1);
 
-        // Vì trang web này khi click lần 2 nó không có work, nên phải click lần 2 này, để click lần 3
+        // Vì trang web này khi click lần 2 nó không có work, nên phải click lần 2 này,
+        // để click lần 3
         homePage.hoverToProductInCollectionPopular(1);
         homePage.clickAddToCompareIconFromCollectionPopular(1);
 
@@ -204,22 +208,24 @@ public class TC_WishList extends BaseTest {
     // Product UI change, ignore test case for now, will update later
     // @Test
     public void TC_15_WishList_Page_Add_To_Cart_Popup_Success() {
-        // Lấy số 3 vì product thứ 3 có bật Add to cart popup và có chọn được product type
+        // Lấy số 3 vì product thứ 3 có bật Add to cart popup và có chọn được product
+        // type
         String productNameInCollectionPopular = homePage.getProducNameInCollectionPopular(3);
         addProductToCompare(3);
         comparePage = homePage.clickCompareIcon();
         comparePage.clickAddToCartByIndex(3);
 
         // Get product info in compare page
-        String productPrice = comparePage.getProductPrice(3); //$134.00
+        String productPrice = comparePage.getProductPrice(3); // $134.00
         String productName = comparePage.getProductNameByIndex(3);
-        int productId =  comparePage.getProductIdByIndex(3);
+        int productId = comparePage.getProductIdByIndex(3);
 
         // Verify product info in Add to cart quickview popup
         Assert.assertTrue(comparePage.isProductNameDisplayedInAddToCartPopup(productName));
         Assert.assertTrue(comparePage.isProductPriceDisplayedInAddToCartPopup(productPrice));
 
-//    / /        Assert.assertEquals(comparePage.getProductIdInAddToCartPopup(),productId);
+        // / /
+        // Assert.assertEquals(comparePage.getProductIdInAddToCartPopup(),productId);
 
         // Select product size
         String mediumSize = "Medium (-$28.80)";
@@ -230,37 +236,40 @@ public class TC_WishList extends BaseTest {
         comparePage.clickAddToCartInAddToCartPopup();
 
         // Verify Add to cart success message
-        Assert.assertTrue(comparePage.getCartPopupText().replaceAll("\\s+", " ").trim().contains("Success: You have added " + productNameInCollectionPopular + " to your shopping cart"));
+        Assert.assertTrue(comparePage.getCartPopupText().replaceAll("\\s+", " ").trim()
+                .contains("Success: You have added " + productNameInCollectionPopular + " to your shopping cart"));
         homePage.clickToCartCompareWishlistClosePopup();
     }
-//
-//    @Test
-//    public void TC_16_WishList_Page_Add_To_Cart_Popup_Success_2nd() {
-//
-//    }
-//
-//    @Test
-//    public void TC_17_WishList_Page_Remove() {
-//
-//    }
-//
-//    @Test
-//    public void TC_18_WishList_Page_Continue() {
-//
-//
-//    }
+
+    //
+    // @Test
+    // public void TC_16_WishList_Page_Add_To_Cart_Popup_Success_2nd() {
+    //
+    // }
+    //
+    // @Test
+    // public void TC_17_WishList_Page_Remove() {
+    //
+    // }
+    //
+    // @Test
+    // public void TC_18_WishList_Page_Continue() {
+    //
+    //
+    // }
     private void verifyProductInfoInWishlistPage(int index, int productIdsCollectionPopular) {
-//        // From UI
-//        String productName = wishListPage.getProductNameByIndex(index);
-//        String productPrice = wishListPage.getProductPrice(index);
-//
-//        // From home page
-//
-//        // Verify data
-//        // Assert.assertTrue(dbMediaSrcList.contains(splitUIImageSrc)); //Tạm bỏ qua verify image do DB thiếu dữ liệu
-//        Assert.assertEquals(productIdComparePage, productIdsCollectionPopular);
-//        Assert.assertEquals(productName, dbProductName);
-//        Assert.assertTrue(productPrice.contains(dbProductPrice));
+        // // From UI
+        // String productName = wishListPage.getProductNameByIndex(index);
+        // String productPrice = wishListPage.getProductPrice(index);
+        //
+        // // From home page
+        //
+        // // Verify data
+        // // Assert.assertTrue(dbMediaSrcList.contains(splitUIImageSrc)); //Tạm bỏ qua
+        // verify image do DB thiếu dữ liệu
+        // Assert.assertEquals(productIdComparePage, productIdsCollectionPopular);
+        // Assert.assertEquals(productName, dbProductName);
+        // Assert.assertTrue(productPrice.contains(dbProductPrice));
     }
 
     private void addProductToWishlistAndVerifyWishlistPage(int numOfProduct) {
@@ -268,11 +277,13 @@ public class TC_WishList extends BaseTest {
             // Get product info from home
             String productNameFromHomePage = homePage.getProducNameInCollectionPopular(i);
             String productPriceFromHomePage = homePage.getProductPriceInCollectionPopular(i);
-            System.out.println("Adding product " + i + " to wishlist: " + productNameFromHomePage + " with price: " + productPriceFromHomePage);
+            System.out.println("Adding product " + i + " to wishlist: " + productNameFromHomePage + " with price: "
+                    + productPriceFromHomePage);
             homePage.hoverToProductInCollectionPopular(i);
             homePage.clickAddToWishListIconFromCollectionPopular(i);
 
-            // vào trang compare - verify number of products. List product trong My wishlist theo thứ tự abc chứ không theo stack or queue
+            // vào trang compare - verify number of products. List product trong My wishlist
+            // theo thứ tự abc chứ không theo stack or queue
             wishListPage = homePage.clickWishlistLinkInWishlistPopup();
             int numberOfProductsInWishlistPage = wishListPage.getTotalProduct();
             List<String> allProductNamesInWishlistPage = wishListPage.getAllProductNamesInWishlistPage();
@@ -284,7 +295,6 @@ public class TC_WishList extends BaseTest {
             // verify product information: name, price, image
             Assert.assertTrue(wishListPage.isYourWishListTitleDisplayed());
             Assert.assertEquals(numberOfProductsInWishlistPage, i);
-
 
             homePage.clickHomeMenuItem();
         }
@@ -311,7 +321,8 @@ public class TC_WishList extends BaseTest {
         comparePage = homePage.clickCompareIcon();
         while (numOfProduct > 1) {
             comparePage.clickRemoveProductByIndex(numOfProduct);
-            Assert.assertTrue(comparePage.getSuccessMessageText().contains("Success: You have modified your product comparison!"));
+            Assert.assertTrue(comparePage.getSuccessMessageText()
+                    .contains("Success: You have modified your product comparison!"));
             numOfProduct--;
             System.out.println("Number of products after remove: " + numOfProduct);
             int remainProduct = comparePage.getNumberOfProductsInComparePage();
@@ -319,7 +330,7 @@ public class TC_WishList extends BaseTest {
             Assert.assertEquals(remainProduct, numOfProduct);
         }
 
-        //Remove last product
+        // Remove last product
         comparePage.clickRemoveProductByIndex(numOfProduct);
         System.out.println("Number of products after remove all: " + numOfProduct);
         Assert.assertTrue(comparePage.isNoProductMessageDisplayed());
@@ -332,36 +343,32 @@ public class TC_WishList extends BaseTest {
             homePage.hoverToProductInCollectionPopular(i);
             homePage.clickAddToWishListIconFromCollectionPopular(i);
             Assert.assertEquals(homePage.getCompareCartWishlistPopupTitleText(), "Wish List (" + i + ")");
-            Assert.assertTrue(homePage.getCompareCartWishListPopupText().replaceAll("\\s+", " ").trim().contains("Success: You have added " + productName + " to your wish list"));
+            Assert.assertTrue(homePage.getCompareCartWishListPopupText().replaceAll("\\s+", " ").trim()
+                    .contains("Success: You have added " + productName + " to your wish list"));
             homePage.clickToCartCompareWishlistClosePopup();
         }
     }
 
     private void removeAllProductInWishList() {
-        int totalProduct = 0;
+        int totalProduct;
         wishListPage = homePage.clickWishListIconWithLoggedIn();
-        try {
-            totalProduct = wishListPage.getTotalProduct();
-        } catch (Exception e) {
-            System.out.println("Error getting total products: " + e.getMessage());
-            Assert.assertEquals(wishListPage.getNoProductMessage(), "No results!");
-            return;
-        }
         totalProduct = wishListPage.getTotalProduct();
 
+        if (totalProduct == 0) {
+            return;
+        }
+
         System.out.println("Total products in wishlist before remove: " + totalProduct);
-        while (totalProduct > 0) {
+        int attempts = 0;
+        int maxAttempts = 10;
+        while (totalProduct > 0 && attempts < maxAttempts) {
             wishListPage.clickRemoveButtonByIndex(totalProduct);
-            totalProduct--;
+            totalProduct = wishListPage.getTotalProduct();
+            attempts++;
             System.out.println("Total products in wishlist after remove: " + totalProduct);
         }
-        Assert.assertEquals(wishListPage.getNoProductMessage(), "No results!");
+        Assert.assertEquals(totalProduct, 0, "Wishlist cleanup failed: products still remain after removal attempts.");
 
     }
 
-    @AfterMethod
-    public void afterMethod() {
-        closeBrowserDriver();
-    }
 }
-

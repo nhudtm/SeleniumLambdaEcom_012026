@@ -1,16 +1,26 @@
 package tests;
 
-import utils.DataFaker;
-import commons.BaseTest;
-import io.qameta.allure.*;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import commons.BaseTest;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import pageObjects.HomePO;
 import pageObjects.MyAccountPO;
 import pageObjects.PageGenerator;
 import pageObjects.RegisterPO;
 import pageUIs.MenuCategoryUI;
+import utils.DataFaker;
 
 @Epic("Login - Register")
 @Feature("Register Tests")
@@ -28,9 +38,9 @@ public class TC_Register_BrowserStackSDK extends BaseTest {
     @Story("Register")
     @Severity(SeverityLevel.MINOR)
     @Parameters({"env","browserName","browserVersion","os","osVersion","url"})
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion, @Optional String os, @Optional String osVersion, String url) {
-        getBrowserDriver2(env, browserName, browserVersion,os, osVersion, url);
+        getBrowserDriverAllEnvironment(env, browserName, browserVersion,os, osVersion, url);
         homepage = PageGenerator.getHomepage(getDriver());
         dataFaker = new DataFaker();
         firstName= dataFaker.getFirstName();
@@ -444,6 +454,6 @@ public class TC_Register_BrowserStackSDK extends BaseTest {
 
     @AfterClass
     public void afterClass() {
-        closeBrowserDriver2();
+        closeBrowserDriverThreadSafe();
     }
 }

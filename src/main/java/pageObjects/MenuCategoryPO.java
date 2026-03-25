@@ -1,22 +1,22 @@
 package pageObjects;
 
-import utils.DBUtils;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
 import commons.BasePage;
 import commons.GlobalConstants;
 import components.FilterComponent;
 import io.qameta.allure.Step;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import pageUIs.MenuCategoryUI;
-
-import java.util.ArrayList;
-import java.util.List;
+import utils.DBUtils;
 
 public class MenuCategoryPO extends BasePage {
     public MenuCategoryPO(WebDriver driver) {
         super(driver);
     }
-
 
     //Menu
     @Step("Click to 'My account' menu item")
@@ -40,6 +40,7 @@ public class MenuCategoryPO extends BasePage {
         return PageGenerator.getAddOnsModulesPage(driver);
     }
 
+    
     public AddOnsWidgetPO clickAddOnsWidget() {
         waitForElementClickable(MenuCategoryUI.ADD_ONS_WIDGETS_LINK);
         clickToElement(MenuCategoryUI.ADD_ONS_WIDGETS_LINK);
@@ -107,7 +108,17 @@ public class MenuCategoryPO extends BasePage {
 
     public HomePO clickHomeMenuItem() {
         waitForElementVisible(MenuCategoryUI.DYNAMIC_MENU_ITEM, "Home");
-        clickToElement(MenuCategoryUI.DYNAMIC_MENU_ITEM, "Home");
+        try {
+            clickToElement(MenuCategoryUI.DYNAMIC_MENU_ITEM, "Home");
+        } catch (Exception e) {
+            clickToElementByJS(MenuCategoryUI.DYNAMIC_MENU_ITEM, "Home");
+        }
+
+        sleepInSecond(2);
+        if (!getPageURL().contains("route=common/home")) {
+            clickToElementByJS(MenuCategoryUI.DYNAMIC_MENU_ITEM, "Home");
+            sleepInSecond(2);
+        }
         return PageGenerator.getHomepage(driver);
     }
 

@@ -5,8 +5,10 @@ import models.Product;
 import models.ProductMedia;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.*;
@@ -21,12 +23,14 @@ public class TC_ProductDetail_1 extends BaseTest {
     protected ProductDetailPO productDetailPage;
     protected MenuCategoryPO menuCategoryPage;
 
-    @Parameters({"browserName", "url"})
-    @BeforeClass
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        homePage = PageGenerator.getHomepage(driver);
-
+      @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        homePage = PageGenerator.getHomepage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
     // Kiểm tra hiển thị đúng thông tin của product (name, code, brand, viewed number, Avalability, Price
@@ -38,7 +42,7 @@ public class TC_ProductDetail_1 extends BaseTest {
     // Kiểm tra Description, Reviews, Custom section
     // Kiểm tra view product image/ video
     // Navigation from Product detail to Category by Image
-    @Test
+    @Test(groups = {"regression", "productDetail"})
     public void TC_Verify_One_Product_Info() {
 //        homePage.hoverToMegaMenu();
         productCategoryPage = homePage.clickChildItemInMegaMenu("Apple");
@@ -63,7 +67,7 @@ public class TC_ProductDetail_1 extends BaseTest {
         Assert.assertEquals(productAvalabilityFromDB, productAvalability);
     }
 
-    @Test
+    @Test(groups = {"regression", "productDetail"})
     public void TC_Verify_One_Product_Info_Image_Video_C2() {
         homePage.hoverToMegaMenu();
         productCategoryPage = homePage.clickChildItemInMegaMenu("Apple");
@@ -499,10 +503,5 @@ public class TC_ProductDetail_1 extends BaseTest {
     }
 
 
-
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
 
 }

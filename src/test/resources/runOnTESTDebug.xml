@@ -8,33 +8,21 @@
         <listener class-name="jiraConfig.JiraListener"/>
     </listeners>
     <parameter name="url" value="https://ecommerce-playground.lambdatest.io"/>
-<!--    <test name="Run on Chrome">-->
-<!--        <parameter name="browserName" value="chrome"/>-->
-<!--        <parameter name="env" value="local"/>-->
-<!--        <classes>-->
-<!--            <class name="tests.TC_Login_SoftAssert"/>-->
-<!--            &lt;!&ndash;            <class name="tests.TC_Login"/>&ndash;&gt;-->
-<!--            &lt;!&ndash;            <class name="tests.TC_Cart"/>&ndash;&gt;-->
 
-<!--        </classes>-->
-<!--    </test>-->
+<groups>
+    <run>
+        <include name="regression"/>
+    </run>
+</groups>
     <test name="Run on Firefox">
-        <parameter name="browserName" value="firefox"/>
+        <parameter name="browserName" value="chrome"/>
         <parameter name="env" value="local"/>
         <classes>
             <!--                        <class name="tests.TC_Cart"/>-->
-            <class name="tests.TC_Login_SoftAssert"/>
+            <class name="tests.TC_ProductCategory"/>
             <!--                        <class name="tests.TC_Compare"/>-->
         </classes>
     </test>
 
-    <!--    <test name="Run on Edge">-->
-    <!--        <parameter name="browserName" value="edge"/>-->
-    <!--        <parameter name="env" value="local"/>-->
-    <!--        <classes>-->
-    <!--&lt;!&ndash;            <class name="tests.TC_Cart"/>&ndash;&gt;-->
-    <!--&lt;!&ndash;            <class name="tests.TC_Login"/>&ndash;&gt;-->
-    <!--            <class name="tests.TC_Compare"/>-->
-    <!--        </classes>-->
-    <!--    </test>-->
+
 </suite>

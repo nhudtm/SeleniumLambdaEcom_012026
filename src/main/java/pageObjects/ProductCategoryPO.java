@@ -1,18 +1,26 @@
 package pageObjects;
 
-import utils.CategoryAPIHelper;
-import utils.DBUtils;
-import components.ProductComponent;
-import models.Product;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import pageUIs.ProductCategoryUI;
-
 import java.util.List;
 import java.util.Map;
 
-public class ProductCategoryPO extends MenuCategoryPO {
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
+import components.ProductComponent;
+import models.Product;
+import pageUIs.ProductCategoryUI;
+import utils.CategoryAPIHelper;
+import utils.DBUtils;
+
+public class ProductCategoryPO extends MenuCategoryPO {
+    /**
+     * Max wait time (in seconds) for pagination to process after clicking next page.
+     * Used to detect if page number actually changed (verifying successful navigation).
+     * Default 5s accommodates: network delay + server rendering + DOM update.
+     * If active page doesn't change within this window, pagination is considered failed.
+     * Tune this value up if test environment has slow network/server response times.
+     */
+    private static final int MAX_PAGE_CHANGE_WAIT_SECONDS = 5;
 
     public ProductCategoryPO(WebDriver driver) {
         super(driver);
@@ -27,16 +35,22 @@ public class ProductCategoryPO extends MenuCategoryPO {
 
     public int getProductQuantityInCategory() {
         int totalProductInCategory = 0;
-        while(true) {
-            waitForElementVisible(  ProductCategoryUI.PRODUCT_ITEM);
-            List<WebElement> listOfProduct = getElementList(  ProductCategoryUI.PRODUCT_ITEM);
+        int guard = 0;
+        while (true) {
+            waitForElementVisible(ProductCategoryUI.PRODUCT_ITEM);
+            List<WebElement> listOfProduct = getElementList(ProductCategoryUI.PRODUCT_ITEM);
             totalProductInCategory += listOfProduct.size();
             System.out.println("Total product in this page = " + listOfProduct.size());
-            if (isElementUndisplayed(  ProductCategoryUI.NEXT_PAGE)) {
+
+            if (!isNextPageAvailable() || !goToNextPage()) {
                 break;
             }
-            scrollToElement(  ProductCategoryUI.NEXT_PAGE);
-            clickToElement(  ProductCategoryUI.NEXT_PAGE);
+
+            guard++;
+            if (guard > 100) {
+                System.out.println("Stop pagination by guard to avoid infinite loop");
+                break;
+            }
         }
         System.out.println("Total product in category = " + totalProductInCategory);
         return totalProductInCategory;
@@ -44,18 +58,24 @@ public class ProductCategoryPO extends MenuCategoryPO {
 
     public List<String> getAllProductNameInCategory() {
         List<String> allProductNames = new java.util.ArrayList<>();
-        while(true) {
-            waitForElementVisible(  ProductCategoryUI.ALL_PRODUCT_NAME);
-            List<WebElement> listOfProductName = getElementList(  ProductCategoryUI.ALL_PRODUCT_NAME);
+        int guard = 0;
+        while (true) {
+            waitForElementVisible(ProductCategoryUI.ALL_PRODUCT_NAME);
+            List<WebElement> listOfProductName = getElementList(ProductCategoryUI.ALL_PRODUCT_NAME);
             for (WebElement product : listOfProductName) {
                 String productName = product.getText();
                 allProductNames.add(productName);
             }
-            if (isElementUndisplayed(  ProductCategoryUI.NEXT_PAGE)) {
+
+            if (!isNextPageAvailable() || !goToNextPage()) {
                 break;
             }
-            scrollToElement(  ProductCategoryUI.NEXT_PAGE);
-            clickToElement(  ProductCategoryUI.NEXT_PAGE);
+
+            guard++;
+            if (guard > 100) {
+                System.out.println("Stop pagination by guard to avoid infinite loop");
+                break;
+            }
         }
         return allProductNames;
     }
@@ -95,9 +115,44 @@ public class ProductCategoryPO extends MenuCategoryPO {
     }
 
 
-    public void goToNextPage() {
-        scrollToElement(  ProductCategoryUI.NEXT_PAGE);
-        clickToElement(  ProductCategoryUI.NEXT_PAGE);
+    public boolean goToNextPage() {
+        String currentPage = getActivePageNumber();
+        
+        // Scroll to product area to stabilize viewport before clicking pagination
+        scrollToElementOnTopByJS(ProductCategoryUI.PRODUCT_ITEM);
+        sleepInSecond(1);
+        
+        // Click next page link without additional scroll (already in viewport after product scroll)
+        String nextPageLink = ProductCategoryUI.NEXT_PAGE + "/a";
+        try {
+            clickToElementByJS(nextPageLink);
+        } catch (Exception e) {
+            System.out.println("Failed to click next page link: " + e.getMessage());
+            return false;
+        }
+
+        // Wait for page to change (with configurable timeout from constant)
+        for (int i = 0; i < MAX_PAGE_CHANGE_WAIT_SECONDS; i++) {
+            sleepInSecond(1);
+            try {
+                String activePage = getActivePageNumber();
+                if (!activePage.equals(currentPage)) {
+                    return true; // Pagination successful - page number changed
+                }
+            } catch (Exception e) {
+                // Ignore transient DOM update issues and retry
+            }
+        }
+        return false; // Page didn't change within MAX_PAGE_CHANGE_WAIT_SECONDS - click likely failed
+    }
+
+    private boolean isNextPageAvailable() {
+        if (isElementUndisplayed(ProductCategoryUI.NEXT_PAGE)) {
+            return false;
+        }
+
+        String className = getElementDOMAttribute(ProductCategoryUI.NEXT_PAGE, "class");
+        return className == null || !className.contains("disabled");
     }
 
     public String getProductPriceFromUI(int index) {

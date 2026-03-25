@@ -3,8 +3,10 @@ package tests;
 import commons.BaseTest;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.MenuCategoryPO;
@@ -18,15 +20,18 @@ public class TC_MegaMenu extends BaseTest {
     protected MenuCategoryPO menuCategoryPage;
     protected ProductCategoryPO productCategoryPage;
 
-    @Parameters({"browserName", "url"})
-    @BeforeClass
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        menuCategoryPage = PageGenerator.getMenuCategoryPage(driver);
+      @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        menuCategoryPage = PageGenerator.getMenuCategoryPage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
     // 75p
-    @Test
+    @Test(groups = {"regression", "megamenu"})
     public void TC_Verify_MegaMenu_Items(){
         // Test case này để kiểm tra điều hướng khi click vào từng item trong Mega Menu
         // Hover Mega Menu
@@ -57,8 +62,5 @@ public class TC_MegaMenu extends BaseTest {
 
 
 
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
+    
 }

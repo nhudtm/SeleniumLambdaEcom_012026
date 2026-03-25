@@ -4,8 +4,10 @@ import utils.DataFaker;
 import commons.BaseTest;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.*;
@@ -19,13 +21,14 @@ public class TC_ProductDetail_2 extends BaseTest {
     protected DataFaker dataFaker;
 
 
-    @Parameters({"browserName", "url"})
-    @BeforeClass
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        homePage = PageGenerator.getHomepage(driver);
-       dataFaker = new DataFaker();
-
+      @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        homePage = PageGenerator.getHomepage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
     // Kiểm tra hiển thị đúng thông tin của product (name, code, brand, viewed number, Avalability, Price
@@ -57,7 +60,7 @@ public class TC_ProductDetail_2 extends BaseTest {
 //
 //    }
 
-    @Test
+    @Test(groups = {"regression", "productDetail"})
     public void TC_Submit_Review_Success() {
         String name = "abc";
         String reviewText = generateRandomNumber() + "This is an automated."; //25 characters
@@ -71,7 +74,7 @@ public class TC_ProductDetail_2 extends BaseTest {
         productDetailPage.clickWriteReviewButton();
         Assert.assertEquals(productDetailPage.getSuccessMessageText(), "Thank you for your review. It has been submitted to the webmaster for approval.");
     }
-@Test
+@Test(groups = {"regression", "productDetail"})
     public void TC_Submit_Review_No_Rating() {
         String name = "This is an automated 1234";
         String reviewText = generateRandomNumber() + "This is an automated review. Please ignore.";
@@ -186,10 +189,5 @@ public class TC_ProductDetail_2 extends BaseTest {
 //
 //    }
 
-
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
 
 }

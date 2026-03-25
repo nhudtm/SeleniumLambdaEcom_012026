@@ -5,6 +5,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import pageObjects.*;
+import utils.PropertiesConfig;
 
 public class Login extends BaseTest {
     WebDriver driver;
@@ -23,8 +24,8 @@ public class Login extends BaseTest {
     public void beforeTest(String browser, String url) {
         driver = getBrowserDriver(browser, url);
         homePage = PageGenerator.getHomepage(driver);
-        email = "lazy@gmail.com";
-        password = "123456";
+        email = PropertiesConfig.getProp("email");
+        password = PropertiesConfig.getProp("password");
 
         // This website does not allow to add cookies, so we have to login with UI in before class of Test classes.
         // Or we can run this Login test class before running other test class to have login state

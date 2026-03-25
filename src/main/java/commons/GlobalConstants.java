@@ -11,22 +11,23 @@ public class GlobalConstants {
     public static final String DEVICE_CONFIG_PATH = PROJECT_PATH + SEPARATOR + "src" + SEPARATOR + "test" + SEPARATOR + "resources" + SEPARATOR + "deviceConfig.properties";
     public static final String OS_NAME = System.getProperty("os.name").toLowerCase();
     public static final String TEST_RESOURCES_PATH = PROJECT_PATH + SEPARATOR + "src" + SEPARATOR + "test" + SEPARATOR + "resources" + SEPARATOR;
-
+    public static final String PROPERTIES_FILE_PATH = TEST_RESOURCES_PATH + "config.properties";
+    
     // Jira Configuration - using BaseTest's getConfigValue method
-    public static final String JIRA_SITE_URL = BaseTest.getConfigValue("JIRA_SITE_URL", "jira.site.url", "https://automationtest.atlassian.net");
-    public static final String JIRA_USERNAME = BaseTest.getConfigValue("JIRA_USERNAME", "jira.username", "");
-    public static final String JIRA_API_KEY = BaseTest.getConfigValue("JIRA_API_KEY", "jira.api.key", "");
-    public static final String JIRA_PROJECT_KEY = BaseTest.getConfigValue("JIRA_PROJECT_KEY", "jira.project.key", "SCRUM");
+    public static final String JIRA_SITE_URL = utils.PropertiesConfig.getProp("jira.site.url");
+    public static final String JIRA_USERNAME = utils.PropertiesConfig.getProp("jira.username");
+    public static final String JIRA_API_KEY = utils.PropertiesConfig.getProp("jira.api.key");
+    public static final String JIRA_PROJECT_KEY = utils.PropertiesConfig.getProp("jira.project.key");
     public static final String BASE_PATH = "/rest/api/3/project/";
     public static final String CREATE_ISSUE_PATH = "/rest/api/3/issue";
     public static final String SEARCH_ISSUE_PATH = "/rest/api/3/search";
 
     // Application URL
-    public static final String DEV_URL = BaseTest.getConfigValue("DEV_URL", "dev.url", "https://ecommerce-playground.lambdatest.io");
+    public static final String DEV_URL = utils.PropertiesConfig.getProp("dev.url");
 
     // BrowserStack Configuration
-    public static final String BROWSER_STACK_USERNAME = BaseTest.getConfigValue("BROWSERSTACK_USERNAME", "browserstack.username", "");
-    public static final String BROWSER_STACK_ACCESS_KEY = BaseTest.getConfigValue("BROWSERSTACK_ACCESS_KEY", "browserstack.access.key", "");
+    public static final String BROWSER_STACK_USERNAME = utils.PropertiesConfig.getProp( "browserstack.username");
+    public static final String BROWSER_STACK_ACCESS_KEY = utils.PropertiesConfig.getProp( "browserstack.access.key");
     public static final String BROWSERSTACK_URL = "https://" + BROWSER_STACK_USERNAME + ":"
             + BROWSER_STACK_ACCESS_KEY
             + "@hub.browserstack.com/wd/hub";

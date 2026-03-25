@@ -37,7 +37,7 @@ public class TC_Register_Android extends BaseTest {
     @Story("Register")
     @Severity(SeverityLevel.MINOR)
     @Parameters({"url"})
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void beforeClass( String url) {
         driver = getAndroidDriver("emulator-5554");
         driver.get(url);
@@ -102,7 +102,7 @@ public class TC_Register_Android extends BaseTest {
         options.setCapability("browserName", "Chrome");
 
         try {
-            URL appiumServerUrl = new URL("http://127.0.0.1:4723/");
+            URL appiumServerUrl = new URL(utils.PropertiesConfig.getProp("appium.server.url"));
             driver = new AndroidDriver(appiumServerUrl, options);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         } catch (Exception e) {

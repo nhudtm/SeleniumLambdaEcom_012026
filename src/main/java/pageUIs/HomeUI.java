@@ -24,13 +24,13 @@ public class HomeUI {
 
     // Collections
     public static final String PRODUCTS_IN_TOP_COLLECTIONS = "xpath=//div[@id='entry_218404']//div[contains(@class,'swiper-slide')]";
-    public static final String DYNAMIC_COLLECTION_PRODUCT = "xpath=(//div[@id='entry_218404']//div[contains(@class,'swiper-slide')])[%s]";
-    public static final String DYNAMIC_COLLECTION_PRODUCT_NAME = "xpath=(//div[@id='entry_218404']//div[contains(@class,'swiper-slide')])[%s]//h4/a";
-    public static final String DYNAMIC_COLLECTION_PRODUCT_ADD_TO_WISHLIST = "xpath=(//div[@id='entry_218404']//div[contains(@class,'swiper-slide')])[%s]//button[@title='Add to Wish List']";
-    public static final String DYNAMIC_COLLECTION_PRODUCT_ADD_TO_CART = "xpath=(//div[@id='entry_218404']//div[contains(@class,'swiper-slide')])[%s]//button[@title='Add to Cart']";
-    public static final String DYNAMIC_COLLECTION_PRODUCT_QUICK_VIEW = "xpath=(//div[@id='entry_218404']//div[contains(@class,'swiper-slide')])[%s]//button[@title='Quick view']";
-    public static final String DYNAMIC_COLLECTION_PRODUCT_ADD_TO_COMPARE = "xpath=(//div[@id='entry_218404']//div[contains(@class,'swiper-slide')])[%s]//button[@title='Compare this Product']";
-    public static final String DYNAMIC_COLLECTION_PRODUCT_PRICE = "xpath= (//div[@id='entry_218404']//div[contains(@class,'swiper-slide')])[%s]//span[@class='price-new']" ;
+    public static final String DYNAMIC_COLLECTION_PRODUCT = "xpath=(//div[@id='entry_218404' or @id='entry_218399']//div[contains(@class,'swiper-slide') and not(contains(@class,'swiper-slide-duplicate'))])[%s]";
+    public static final String DYNAMIC_COLLECTION_PRODUCT_NAME = "xpath=(//div[@id='entry_218404' or @id='entry_218399']//div[contains(@class,'swiper-slide') and not(contains(@class,'swiper-slide-duplicate'))])[%s]//h4/a";
+    public static final String DYNAMIC_COLLECTION_PRODUCT_ADD_TO_WISHLIST = "xpath=(//div[@id='entry_218404' or @id='entry_218399']//div[contains(@class,'swiper-slide') and not(contains(@class,'swiper-slide-duplicate'))])[%s]//button[@title='Add to Wish List']";
+    public static final String DYNAMIC_COLLECTION_PRODUCT_ADD_TO_CART = "xpath=(//div[@id='entry_218404' or @id='entry_218399']//div[contains(@class,'swiper-slide') and not(contains(@class,'swiper-slide-duplicate'))])[%s]//button[@title='Add to Cart']";
+    public static final String DYNAMIC_COLLECTION_PRODUCT_QUICK_VIEW = "xpath=(//div[@id='entry_218404' or @id='entry_218399']//div[contains(@class,'swiper-slide') and not(contains(@class,'swiper-slide-duplicate'))])[%s]//button[@title='Quick view']";
+    public static final String DYNAMIC_COLLECTION_PRODUCT_ADD_TO_COMPARE = "xpath=(//div[@id='entry_218404' or @id='entry_218399']//div[contains(@class,'swiper-slide') and not(contains(@class,'swiper-slide-duplicate'))])[%s]//button[@title='Compare this Product']";
+    public static final String DYNAMIC_COLLECTION_PRODUCT_PRICE = "xpath=(//div[@id='entry_218404' or @id='entry_218399']//div[contains(@class,'swiper-slide') and not(contains(@class,'swiper-slide-duplicate'))])[%s]//span[@class='price-new']" ;
 
 
     //Login warning
@@ -51,7 +51,7 @@ public class HomeUI {
     public static final String PRODUCT_POPUP_CLOSE_BUTTON = "xpath=//div[@id='quick-view']/div//button[@aria-label='close']";
 
 
-    public static final String DYNAMIC_COLLECTION_PRODUCT_ID = "xpath=(//div[@id='entry_218404']//div[contains(@class,'swiper-slide')])[%s]//a[contains(@id,'mz-product-listing')]" ;
+    public static final String DYNAMIC_COLLECTION_PRODUCT_ID = "xpath=(//div[@id='entry_218404' or @id='entry_218399']//div[contains(@class,'swiper-slide') and not(contains(@class,'swiper-slide-duplicate'))])[%s]//a[contains(@id,'mz-product-listing')]" ;
     public static final String CART_POPUP_CHECKOUT_BUTTON = "xpath=//div[@id='notification-box-top']//div[@class='toast-body']//a[2]" ;
     public static final String CART_POPUP_VIEW_CART_BUTTON = "xpath=//div[@id='notification-box-top']//div[@class='toast-body']//a[1]" ;
 

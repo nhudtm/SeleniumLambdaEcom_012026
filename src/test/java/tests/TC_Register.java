@@ -6,8 +6,10 @@ import io.qameta.allure.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.HomePO;
@@ -20,7 +22,7 @@ import pageUIs.MenuCategoryUI;
 @Feature("Register Tests")
 public class TC_Register extends BaseTest {
     WebDriver driver;
-    HomePO homepage;
+    HomePO homePage;
     MenuCategoryUI menuCategory;
     MyAccountPO myAccount;
     RegisterPO registerPO;
@@ -31,20 +33,21 @@ public class TC_Register extends BaseTest {
     @Description("Register to system with valid information")
     @Story("Register")
     @Severity(SeverityLevel.MINOR)
-    @Parameters({ "browserName", "url" })
+    @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
     @BeforeClass(alwaysRun = true)
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        homepage = PageGenerator.getHomepage(driver);
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        homePage = PageGenerator.getHomepage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
+
         dataFaker = new DataFaker();
         firstName = dataFaker.getFirstName();
         lastName = dataFaker.getLastName();
         email = dataFaker.getEmail();
         phone = dataFaker.getPhone();
         password = dataFaker.getPassword();
-
-        System.out
-                .println("Thread ID = " + Thread.currentThread().getId() + " - " + browser + " - " + driver.toString());
     }
 
     // Multi field empty
@@ -53,7 +56,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_01_Register_Blank_Data() {
-        myAccount = homepage.clickMyAccount();
+        myAccount = homePage.clickMyAccount();
         registerPO = myAccount.clickContinueButton();
         registerPO.clickToContinueButtonAtResigterPage();
 
@@ -72,7 +75,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_02_Register_FirstName_Blank() {
-        myAccount = homepage.clickMyAccount();
+        myAccount = homePage.clickMyAccount();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToLastNameTextbox(lastName);
         registerPO.inputToEmailTextbox(email);
@@ -90,7 +93,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_02_Register_FirstName_Over_Max() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox("asdf asda asdf asdd asda asda asdd");
         registerPO.clickToContinueButtonAtResigterPage();
@@ -103,7 +106,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_03_Register_LastName_Blank() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox(firstName);
         registerPO.inputToEmailTextbox(email);
@@ -120,7 +123,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_03_Register_LastName_Over_Max() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         // Max = 32 characters
         registerPO.inputToLastNameTextbox("asdf asda asdf asdd asda asda asdd");
@@ -133,7 +136,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_04_Register_Email_Blank() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox(firstName);
         registerPO.inputToLastNameTextbox(lastName);
@@ -150,7 +153,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_04_Register_Email_Invalid_01() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToEmailTextbox("123@456.789@abc");
         registerPO.clickToContinueButtonAtResigterPage();
@@ -163,7 +166,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_05_Register_Email_Invalid_02() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToEmailTextbox("123@456");
         registerPO.clickToContinueButtonAtResigterPage();
@@ -172,7 +175,7 @@ public class TC_Register extends BaseTest {
 
     // @Test
     // public void TC_06_Register_Email_Existed() {
-    // myAccount = homepage.openMyAccountPage();
+    // myAccount = homePage.openMyAccountPage();
     // registerPO = myAccount.clickContinueButton();
     // registerPO.inputToFirstNameTextbox(firstName);
     // registerPO.inputToLastNameTextbox(lastName);
@@ -193,7 +196,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_05_Register_Phone_Blank() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox(firstName);
         registerPO.inputToLastNameTextbox(lastName);
@@ -211,7 +214,7 @@ public class TC_Register extends BaseTest {
     @Test
     public void TC_05_Register_Phone_Over_Max() {
         // Max = 32 characters
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToPhoneTextbox("012345678901234567890123456789012345");
         registerPO.clickToContinueButtonAtResigterPage();
@@ -223,7 +226,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_06_Register_Phone_Below_Min() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToPhoneTextbox("01");
         registerPO.clickToContinueButtonAtResigterPage();
@@ -236,7 +239,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_07_Register_Password_Blank() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox(firstName);
         registerPO.inputToLastNameTextbox(lastName);
@@ -254,7 +257,7 @@ public class TC_Register extends BaseTest {
     @Test
     public void TC_07_Register_Password_Over_Max() {
         // Max = 20 characters
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToPasswordTextbox("123456789012345678901");
         registerPO.clickToContinueButtonAtResigterPage();
@@ -268,7 +271,7 @@ public class TC_Register extends BaseTest {
     @Test
     public void TC_08_Register_Password_Below_Min() {
         // Min = 4 characters
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToPasswordTextbox("123");
         registerPO.clickToContinueButtonAtResigterPage();
@@ -280,7 +283,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_09_Register_ConfirmPassword_Blank() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToPasswordTextbox(password);
         registerPO.clickToPrivacyPolicyCheckbox();
@@ -293,7 +296,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     @Test
     public void TC_09_Register_ConfirmPassword_Not_Match() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToPasswordTextbox(password);
         registerPO.inputToConfirmPasswordTextbox("12345678");
@@ -312,7 +315,7 @@ public class TC_Register extends BaseTest {
         phone = dataFaker.getPhone();
         password = dataFaker.getPassword();
 
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox(firstName);
         registerPO.inputToLastNameTextbox(lastName);
@@ -337,7 +340,7 @@ public class TC_Register extends BaseTest {
     @Description("Register to system with valid information and NewsLetter Yes")
     @Story("Register")
     @Severity(SeverityLevel.NORMAL)
-    @Test
+    @Test(groups = { "regression", "register" })
     public void TC_11_Register_Success_NewsLetter_Yes() {
         firstName = dataFaker.getFirstName();
         lastName = dataFaker.getLastName();
@@ -345,7 +348,7 @@ public class TC_Register extends BaseTest {
         phone = dataFaker.getPhone();
         password = dataFaker.getPassword();
 
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox(dataFaker.getFirstName());
         registerPO.inputToLastNameTextbox(dataFaker.getLastName());
@@ -376,7 +379,7 @@ public class TC_Register extends BaseTest {
     public void TC_12_Register_Success_MinData() {
         email = dataFaker.getEmail();
 
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox("A");
         registerPO.inputToLastNameTextbox("B");
@@ -402,7 +405,7 @@ public class TC_Register extends BaseTest {
     public void TC_13_Register_Success_MaxData() {
         email = dataFaker.getEmail();
 
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox("asdf asda asdf asdf asda asdf as");
         registerPO.inputToLastNameTextbox("asdf asda asdf asdf asda asdf as");
@@ -426,7 +429,7 @@ public class TC_Register extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     // @Test
     public void TC_14_Register_SQLInjection_UserName() {
-        myAccount = homepage.clickMyAccountMenuItem();
+        myAccount = homePage.clickMyAccountMenuItem();
         registerPO = myAccount.clickContinueButton();
         registerPO.inputToFirstNameTextbox(" ' or '1'='1 ");
         registerPO.inputToLastNameTextbox(lastName);
@@ -442,8 +445,5 @@ public class TC_Register extends BaseTest {
 
     }
 
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
+    
 }

@@ -5,8 +5,10 @@ import utils.ProductActionHelper;
 import commons.BaseTest;
 import components.ProductComponent;
 import org.openqa.selenium.WebDriver;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.*;
@@ -23,12 +25,12 @@ public class TC_ProductActionFromHome extends BaseTest {
     List<ProductComponent> allProductsTopProducts;
     List<ProductComponent> allProductsTopCollections;
 
-
-    @Parameters({"browserName", "url"})
+  @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
     @BeforeClass(alwaysRun = true)
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        homePage = PageGenerator.getHomepage(driver);
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        homePage = PageGenerator.getHomepage(getDriver(context));
         allProductsTopProducts = homePage.getAllProductsInTopProducts();
         allProductsTopCollections = homePage.getAllProductsInTopCollections();
 
@@ -49,9 +51,9 @@ public class TC_ProductActionFromHome extends BaseTest {
         ProductActionHelper.verifyProductActionDisplayed(allProductsTopProducts);
     }
 
-    @Test
+    @Test(groups = {"regression", "productAction"})
     public void TC_Top_Product_Add_To_Cart_Success() {
-        ProductActionHelper.verifyAddToCartFunctionality(allProductsTopProducts, driver);
+        ProductActionHelper.verifyAddToCartFunctionality(allProductsTopProducts, getDriver());
     }
 
     @Test
@@ -61,7 +63,7 @@ public class TC_ProductActionFromHome extends BaseTest {
 
     @Test
     public void TC_Top_Collections_Add_To_Cart_Success() {
-        ProductActionHelper.verifyAddToCartFunctionality(allProductsTopCollections, driver);
+        ProductActionHelper.verifyAddToCartFunctionality(allProductsTopCollections, getDriver());
     }
 
     @Test
@@ -82,9 +84,5 @@ public class TC_ProductActionFromHome extends BaseTest {
 
 
 
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
 
 }

@@ -1,20 +1,25 @@
 package tests;
 
-import utils.DataFaker;
-import utils.ProductActionHelper;
-import commons.BaseTest;
-import components.ProductComponent;
-import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
-import pageObjects.*;
-
 import java.util.List;
 
+import org.openqa.selenium.WebDriver;
+import org.testng.ITestContext;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import commons.BaseTest;
+import components.ProductComponent;
+import pageObjects.HomePO;
+import pageObjects.MenuCategoryPO;
+import pageObjects.PageGenerator;
+import pageObjects.ProductCategoryPO;
+import pageObjects.ProductDetailPO;
+import utils.DataFaker;
+import utils.ProductActionHelper;
+
 public class TC_ProductActionFromCategory extends BaseTest {
-    WebDriver driver;
     protected HomePO homePage;
     protected ProductCategoryPO productCategoryPage;
     protected ProductDetailPO productDetailPage;
@@ -23,11 +28,12 @@ public class TC_ProductActionFromCategory extends BaseTest {
     List<ProductComponent> allProducts;
 
 
-    @Parameters({"browserName", "url"})
+      @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
     @BeforeClass(alwaysRun = true)
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        menuCategoryPage = PageGenerator.getMenuCategoryPage(driver);
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+                WebDriver currentDriver = getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+                menuCategoryPage = PageGenerator.getMenuCategoryPage(currentDriver);
         menuCategoryPage.hoverToMegaMenu();
         productCategoryPage = menuCategoryPage.clickChildItemInMegaMenu("Apple");
         allProducts = productCategoryPage.getAllProductsInPage();
@@ -42,21 +48,20 @@ public class TC_ProductActionFromCategory extends BaseTest {
     // Kiểm tra Description, Reviews, Custom section
     // Kiểm tra view product image/ video
     // Navigation from Product detail to Category by Image
-    @Test
+    @Test(groups = {"regression", "productAction"})
     public void TC_Product_Quick_Action_Icon_Displayed() {
         ProductActionHelper.verifyProductActionDisplayed(allProducts);
     }
 
     @Test
     public void TC_Add_To_Cart_Success() {
-        ProductActionHelper.verifyAddToCartFunctionality(allProducts, driver);
+        ProductActionHelper.verifyAddToCartFunctionality(allProducts, getDriver());
     }
 
     @Test
     public void TC_Add_To_Compare_Success() {
 
     }
-
 
     @Test
     public void TC_Add_To_WishList_Success() {
@@ -67,12 +72,4 @@ public class TC_ProductActionFromCategory extends BaseTest {
     public void TC_Quick_View_Success() {
 
     }
-
-
-
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
-
 }

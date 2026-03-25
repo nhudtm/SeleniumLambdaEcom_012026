@@ -12,7 +12,6 @@ public class FilterHelper {
         float maxPriceFloat = Float.parseFloat(maxPrice);
         for (ProductComponent product : productList) {
             float productPrice = product.getProductPrice();
-            System.out.println("Product Price: " + productPrice);
             Assert.assertTrue(productPrice >= minPriceFloat && productPrice <= maxPriceFloat);
         }
     }

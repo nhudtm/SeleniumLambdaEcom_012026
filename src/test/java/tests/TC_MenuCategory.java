@@ -3,8 +3,10 @@ package tests;
 import commons.BaseTest;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.*;
@@ -12,7 +14,6 @@ import pageObjects.*;
 public class TC_MenuCategory extends BaseTest {
     protected WebDriver driver;
     protected HomePO homePage;
-    protected LoginPO loginPage;
     protected MyAccountPO myAccountPage;
     protected HomePO homeHomePage;
     protected SpecialPO specialPage;
@@ -28,32 +29,35 @@ public class TC_MenuCategory extends BaseTest {
     protected MenuCategoryPO menuCategoryPage;
     protected ProductCategoryPO productCategoryPO;
 
-    @Parameters({"browserName", "url"})
-    @BeforeClass
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        menuCategoryPage = PageGenerator.getMenuCategoryPage(driver);
+      @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        menuCategoryPage = PageGenerator.getMenuCategoryPage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
-    @Test
+    @Test(groups = {"regression", "menu"})
     public void TC_01_Access_Home_Page(){
         homePage = menuCategoryPage.clickHomeMenuItem();
         Assert.assertTrue(homePage.isHomeSliderDisplayed());
     }
 
-    @Test
+    @Test(groups = {"regression", "menu"})
     public void TC_02_Access_Special_Page(){
         specialPage = menuCategoryPage.clickSpecialMenuItem();
         Assert.assertTrue(specialPage.isSpecialPageTitleDisplayed());
     }
 
-    @Test
+    @Test(groups = {"regression", "menu"})  
     public void TC_03_Access_Blog_Page(){
         blogPage = menuCategoryPage.clickBlogMenuItem();
         Assert.assertTrue(blogPage.isBlogTitleDisplayed());
     }
 
-    @Test
+    @Test(groups = {"regression", "menu"})
     public void TC_04_Access_AddOnsModules_Page(){
         menuCategoryPage.hoverToAddOnsMenuItem(); // viet o MenuCategoryPO
         addOnsModulesPage = menuCategoryPage.clickAddOnsModules();
@@ -103,8 +107,8 @@ public class TC_MenuCategory extends BaseTest {
 
     @Test
     public void TC_14_Access_WishList_Page_With_Login(){
-        String email = "lazy@gmail.com";
-        String password = "123456";
+        String email = utils.PropertiesConfig.getProp("email");
+        String password = utils.PropertiesConfig.getProp("password");
         myAccountPage = homePage.clickMyAccountMenuItem();
         myAccountPage.inputToEmailTextbox(email);
         myAccountPage.inputToPasswordTextbox(password);
@@ -152,9 +156,4 @@ public class TC_MenuCategory extends BaseTest {
 //        }
     }
 
-    @AfterClass
-    public void afterClass() {
-
-        closeBrowserDriver();
-    }
 }

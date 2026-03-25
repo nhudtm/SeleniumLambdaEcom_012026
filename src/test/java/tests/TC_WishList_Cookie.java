@@ -1,13 +1,16 @@
 package tests;
 
 import utils.LoginHelper;
+import utils.PropertiesConfig;
 import commons.BaseTest;
 import components.ProductComponent;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.*;
@@ -26,22 +29,24 @@ public class TC_WishList_Cookie extends BaseTest {
     String email, password;
     Set<Cookie> cookies;
 
-
-    @Parameters({"browserName", "url"})
-    @BeforeClass
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        driver.get(url);
-        homePage = PageGenerator.getHomepage(driver);
-        email = "lazy@gmail.com";
-        password = "123456";
+      @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        homePage = PageGenerator.getHomepage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
+    
+        email = PropertiesConfig.getProp("email");
+        password = PropertiesConfig.getProp("password");
 
         // use cookie here for login state, but the website does not allow to add cookie, so we have to login with UI
         LoginHelper.login(homePage,email,password);
         homePage.sleepInSecond(5);
     }
 
-    @Test
+    @Test(groups = {"regression", "wishlist"})
     public void TC_01_Add_To_WishList_Popup_1_Product() {
         //Go to wishlist page and remove all product if have
         wishListPage = homePage.clickWishListIconWithLoggedIn();
@@ -357,9 +362,5 @@ public class TC_WishList_Cookie extends BaseTest {
 
     }
 
-    @AfterClass
-    public void afterMethod() {
-        closeBrowserDriver();
-    }
 }
 

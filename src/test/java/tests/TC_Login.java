@@ -1,16 +1,23 @@
 package tests;
 
-import commons.BaseTest;
-import io.qameta.allure.*;
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+
+import commons.AuthMessages;
+import commons.BaseTest;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import pageObjects.HomePO;
 import pageObjects.MyAccountPO;
 import pageObjects.PageGenerator;
+import utils.PropertiesConfig;
 
 @Epic("Login - Register")
 @Feature("Login Tests")
@@ -19,15 +26,15 @@ public class TC_Login extends BaseTest {
     protected HomePO homePage;
     protected MyAccountPO myAccount;
 
-    String email = "lazy@gmail.com";
-    String password = "123456";
+    String email = PropertiesConfig.getProp("email");
+    String password = PropertiesConfig.getProp("password");
 
     @Parameters({"env", "browserName", "browserVersion", "os", "osVersion", "url"})
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion, @Optional String os, @Optional String osVersion, String url, ITestContext context) {
-         getBrowserDriver2(env, browserName, browserVersion, os, osVersion, url, context);
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
         homePage = PageGenerator.getHomepage(getDriver(context));
-        System.out.println("Thread id beforeClass TC_Login: " + Thread.currentThread().getId() + " - " + getDriver().toString());
+        log.info("Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
     @Description("User 05 - Login with valid information")
@@ -39,7 +46,7 @@ public class TC_Login extends BaseTest {
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
-        Assert.assertTrue(myAccount.isMyAccountTitleDisplayed());
+        assertTrueWithMessage(myAccount.isMyAccountTitleDisplayed(), "Expected my account title not found");
         myAccount.clickAccountRightMenu("Logout");
 
     }
@@ -53,7 +60,7 @@ public class TC_Login extends BaseTest {
         myAccount.inputToEmailTextbox("  " + email + "  ");
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
-        Assert.assertTrue(myAccount.getWarningMessageText().contains("Warning: No match for E-Mail Address and/or Password."));
+        assertTrueWithMessage(myAccount.getWarningMessageText().contains(AuthMessages.LOGIN_NO_MATCH_WARNING), "Expected warning message not found");
     }
 
     @Description("User 03 - Login with email case sensitive")
@@ -72,7 +79,7 @@ public class TC_Login extends BaseTest {
         myAccount.inputToEmailTextbox(email.toUpperCase());
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
-        Assert.assertTrue(myAccount.isMyAccountTitleDisplayed());
+        assertTrueWithMessage(myAccount.isMyAccountTitleDisplayed(), "Expected my account title not found");
         myAccount.clickAccountRightMenu("Logout");
     }
 
@@ -83,7 +90,7 @@ public class TC_Login extends BaseTest {
     public void TC_02_Login_With_Blank_Info() {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.clickLoginButton();
-        Assert.assertTrue(myAccount.getWarningMessageText().contains("Warning: No match for E-Mail Address and/or Password."));
+        assertTrueWithMessage(myAccount.getWarningMessageText().contains(AuthMessages.LOGIN_NO_MATCH_WARNING), "Expected warning message not found");
     }
 
     @Description("User 04 - Login with blank email")
@@ -94,7 +101,7 @@ public class TC_Login extends BaseTest {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
-        Assert.assertTrue(myAccount.getWarningMessageText().contains("Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour."));
+        assertTrueWithMessage(myAccount.getWarningMessageText().contains(AuthMessages.LOGIN_ACCOUNT_LOCKED_WARNING), "Expected warning message not found");
     }
 
     @Description("User 06 - Login with blank password")
@@ -105,7 +112,7 @@ public class TC_Login extends BaseTest {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(password);
         myAccount.clickLoginButton();
-        Assert.assertTrue(myAccount.getWarningMessageText().contains("Warning: No match for E-Mail Address and/or Password."));
+        assertTrueWithMessage(myAccount.getWarningMessageText().contains(AuthMessages.LOGIN_NO_MATCH_WARNING), "Expected warning message not found");
     }
 
     @Description("User 07 - Login with invalid email")
@@ -116,7 +123,7 @@ public class TC_Login extends BaseTest {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox("abc@abc");
         myAccount.clickLoginButton();
-        Assert.assertTrue(myAccount.getWarningMessageText().contains("Warning: No match for E-Mail Address and/or Password."));
+        assertTrueWithMessage(myAccount.getWarningMessageText().contains(AuthMessages.LOGIN_NO_MATCH_WARNING), "Expected warning message not found");
     }
 
 
@@ -130,7 +137,7 @@ public class TC_Login extends BaseTest {
         myAccount.inputToEmailTextbox("abc@gmail.com");
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
-        Assert.assertTrue(myAccount.getWarningMessageText().contains("Warning: No match for E-Mail Address and/or Password."));
+        assertTrueWithMessage(myAccount.getWarningMessageText().contains(AuthMessages.LOGIN_NO_MATCH_WARNING), "Expected warning message not found");
 
     }
 
@@ -143,7 +150,7 @@ public class TC_Login extends BaseTest {
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox("123");
         myAccount.clickLoginButton();
-        Assert.assertTrue(myAccount.getWarningMessageText().contains("Warning: No match for E-Mail Address and/or Password."));
+        assertTrueWithMessage(myAccount.getWarningMessageText().contains(AuthMessages.LOGIN_NO_MATCH_WARNING), "Expected warning message not found");
     }
 
     @Description("User 10 - Login with exceed attempt")
@@ -159,20 +166,20 @@ public class TC_Login extends BaseTest {
             myAccount.clickLoginButton();
         }
        
-        Assert.assertTrue(myAccount.getWarningMessageText().contains("Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour."));
+        assertTrueWithMessage(myAccount.getWarningMessageText().contains(AuthMessages.LOGIN_ACCOUNT_LOCKED_WARNING), "Expected warning message not found");
     }
 
     @Description("User 01 - Forgot Password with valid email")
     @Story("Forgot Password")
     @Severity(SeverityLevel.CRITICAL)
-    @Test
+    @Test(groups = {"regression", "login"})
     public void TC_01_Forgot_Password_Success() {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.clickForgottenPassword();
-        Assert.assertTrue(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"));
+        assertTrueWithMessage(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"), "Expected forgot password page title not found");
         myAccount.enterEmailToResetPassword(email);
         myAccount.clickContinueButtonInForgotPasswordPage();
-        Assert.assertTrue(myAccount.getSuccessMessageTextInForgotPasswordPage().contains("An email with a confirmation link has been sent your email address."));
+        assertTrueWithMessage(myAccount.getSuccessMessageTextInForgotPasswordPage().contains(AuthMessages.LOGIN_CONFIRMATION_LINK_SENT), "Expected success message not found");
 
         //Verify email is sent
 
@@ -186,9 +193,9 @@ public class TC_Login extends BaseTest {
     public void TC_02_Forgot_Password_Blank_Email() {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.clickForgottenPassword();
-        Assert.assertTrue(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"));
+        assertTrueWithMessage(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"), "Expected forgot password page title not found");
         myAccount.clickContinueButtonInForgotPasswordPage();
-        Assert.assertTrue(myAccount.getWarningMessageTextInForgotPasswordPage().contains("Warning: The E-Mail Address was not found in our records, please try again!"));
+        assertTrueWithMessage(myAccount.getWarningMessageTextInForgotPasswordPage().contains(AuthMessages.FORGOT_PASSWORD_EMAIL_NOT_FOUND_WARNING), "Expected warning message not found");
     }
 
     @Description("User 03 - Forgot Password with email has space")
@@ -198,10 +205,10 @@ public class TC_Login extends BaseTest {
     public void TC_03_Forgot_Password_Email_Has_Space() {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.clickForgottenPassword();
-        Assert.assertTrue(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"));
+        assertTrueWithMessage(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"), "Expected forgot password page title not found");
         myAccount.enterEmailToResetPassword("  " + email + "  ");
         myAccount.clickContinueButtonInForgotPasswordPage();
-        Assert.assertTrue(myAccount.getWarningMessageTextInForgotPasswordPage().contains("Warning: The E-Mail Address was not found in our records, please try again!"));
+        assertTrueWithMessage(myAccount.getWarningMessageTextInForgotPasswordPage().contains(AuthMessages.FORGOT_PASSWORD_EMAIL_NOT_FOUND_WARNING), "Expected warning message not found");
     }
 
     @Description("User 04 - Forgot Password with email case sensitive")
@@ -211,11 +218,11 @@ public class TC_Login extends BaseTest {
     public void TC_04_Forgot_Password_Email_Case_Sensitive() {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.clickForgottenPassword();
-        Assert.assertTrue(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"));
+        assertTrueWithMessage(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"), "Expected forgot password page title not found");
         System.out.println("Sau khi test failed");
         myAccount.enterEmailToResetPassword(email.toUpperCase());
         myAccount.clickContinueButtonInForgotPasswordPage();
-        Assert.assertTrue(myAccount.getSuccessMessageTextInForgotPasswordPage().contains("An email with a confirmation link has been sent your email address."));
+        assertTrueWithMessage(myAccount.getSuccessMessageTextInForgotPasswordPage().contains(AuthMessages.LOGIN_CONFIRMATION_LINK_SENT), "Expected success message not found");
     }
 
     @Description("User 05 - Forgot Password with invalid email")
@@ -226,11 +233,11 @@ public class TC_Login extends BaseTest {
         // Email ko đúng định dạng
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.clickForgottenPassword();
-        Assert.assertTrue(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"));
+        assertTrueWithMessage(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"), "Expected forgot password page title not found");
         System.out.println("Sau khi test failed");
         myAccount.enterEmailToResetPassword("abc@abc");
         myAccount.clickContinueButtonInForgotPasswordPage();
-        Assert.assertTrue(myAccount.getWarningMessageTextInForgotPasswordPage().contains("Warning: The E-Mail Address was not found in our records, please try again!"));
+        assertTrueWithMessage(myAccount.getWarningMessageTextInForgotPasswordPage().contains(AuthMessages.FORGOT_PASSWORD_EMAIL_NOT_FOUND_WARNING), "Expected warning message not found");
     }
 
     @Description("User 06 - Forgot Password with not existed email")
@@ -241,10 +248,10 @@ public class TC_Login extends BaseTest {
         // Đúng email format nhưng không tồn tại trong hệ thống
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.clickForgottenPassword();
-        Assert.assertTrue(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"));
+        assertTrueWithMessage(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"), "Expected forgot password page title not found");
         myAccount.enterEmailToResetPassword("abcsdfsd@gmail.com");
         myAccount.clickContinueButtonInForgotPasswordPage();
-        Assert.assertTrue(myAccount.getWarningMessageTextInForgotPasswordPage().contains("Warning: The E-Mail Address was not found in our records, please try again!"));
+        assertTrueWithMessage(myAccount.getWarningMessageTextInForgotPasswordPage().contains(AuthMessages.FORGOT_PASSWORD_EMAIL_NOT_FOUND_WARNING), "Expected warning message not found");
     }
 
     @Description("User 07 - Forgot Password Cancel")
@@ -254,10 +261,10 @@ public class TC_Login extends BaseTest {
     public void TC_07_Forgot_Password_Cancel() {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.clickForgottenPassword();
-        Assert.assertTrue(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"));
+        assertTrueWithMessage(myAccount.getForgotPasswordPageTitleText().contains("Forgot Your Password?"), "Expected forgot password page title not found");
         myAccount.enterEmailToResetPassword(email);
         myAccount.clickBackButtonInForgotPasswordPage();
-        Assert.assertTrue(myAccount.isLoginFormDisplayed());
+        assertTrueWithMessage(myAccount.isLoginFormDisplayed(), "Expected login form not found");
     }
 
 

@@ -1,16 +1,24 @@
 package tests;
 
-import commons.BaseTest;
-import io.qameta.allure.*;
-import jiraConfig.JiraCreateIssue;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+
+import commons.AuthMessages;
+import commons.BaseTest;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
+import jiraConfig.JiraCreateIssue;
 import pageObjects.HomePO;
 import pageObjects.MyAccountPO;
 import pageObjects.PageGenerator;
+import utils.PropertiesConfig;
 
 @Epic("Login - Register")
 @Feature("Login Tests")
@@ -20,13 +28,13 @@ public class TC_Login_SoftAssert extends BaseTest {
     protected MyAccountPO myAccount;
 
 
-    String email = "lazy@gmail.com";
-    String password = "123456";
+    String email = PropertiesConfig.getProp("email");
+    String password = PropertiesConfig.getProp("password");
 
     @Parameters({"env", "browserName", "browserVersion", "os", "osVersion", "url"})
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion, @Optional String os, @Optional String osVersion, String url, ITestContext context) {
-         getBrowserDriver2(env, browserName, browserVersion, os, osVersion, url, context);
+         getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
         homePage = PageGenerator.getHomepage(getDriver(context));
         System.out.println("Thread id beforeClass TC_Login: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
@@ -35,7 +43,7 @@ public class TC_Login_SoftAssert extends BaseTest {
     @Description("User 05 - Login with valid information")
     @Story("Login")
     @Severity(SeverityLevel.CRITICAL)
-    @Test
+    @Test(groups = {"regression", "login"})
     public void TC_05_Login_With_Valid_Info() {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(email);
@@ -56,7 +64,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         myAccount.inputToEmailTextbox("  " + email + "  ");
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
-        verifyEqual(myAccount.getWarningMessageText(), " Warning: No match for E-Mail Address and/or Password.");
+        verifyEqual(myAccount.getWarningMessageText(), AuthMessages.LOGIN_NO_MATCH_WARNING_WITH_LEADING_SPACE);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -88,7 +96,7 @@ public class TC_Login_SoftAssert extends BaseTest {
     public void TC_02_Login_With_Blank_Info() {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.clickLoginButton();
-        verifyEqual(myAccount.getWarningMessageText(), "Warning: No match for E-Mail Address and/or Password.");
+        verifyEqual(myAccount.getWarningMessageText(), AuthMessages.LOGIN_NO_MATCH_WARNING);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -100,7 +108,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
-        verifyEqual(myAccount.getWarningMessageText(), "Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour.");
+        verifyEqual(myAccount.getWarningMessageText(), AuthMessages.LOGIN_ACCOUNT_LOCKED_WARNING);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -112,7 +120,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox(password);
         myAccount.clickLoginButton();
-        verifyEqual(myAccount.getWarningMessageText(), "Warning: No match for E-Mail Address and/or Password.");
+        verifyEqual(myAccount.getWarningMessageText(), AuthMessages.LOGIN_NO_MATCH_WARNING);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -124,7 +132,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         myAccount = homePage.clickMyAccountMenuItem();
         myAccount.inputToEmailTextbox("abc@abc");
         myAccount.clickLoginButton();
-        verifyEqual(myAccount.getWarningMessageText(), "Warning: No match for E-Mail Address and/or Password.");
+        verifyEqual(myAccount.getWarningMessageText(), AuthMessages.LOGIN_NO_MATCH_WARNING);
     }
 
 
@@ -139,7 +147,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         myAccount.inputToEmailTextbox("abc@gmail.com");
         myAccount.inputToPasswordTextbox(password);
         myAccount.clickLoginButton();
-        verifyEqual(myAccount.getWarningMessageText(), "Warning: No match for E-Mail Address and/or Password.");
+        verifyEqual(myAccount.getWarningMessageText(), AuthMessages.LOGIN_NO_MATCH_WARNING);
 
     }
 
@@ -153,7 +161,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox("123");
         myAccount.clickLoginButton();
-        verifyEqual(myAccount.getWarningMessageText(), "Warning: No match for E-Mail Address and/or Password.");
+        verifyEqual(myAccount.getWarningMessageText(), AuthMessages.LOGIN_NO_MATCH_WARNING);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -166,7 +174,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         myAccount.inputToEmailTextbox(email);
         myAccount.inputToPasswordTextbox("123");
         myAccount.clickLoginButton();
-        verifyEqual(myAccount.getWarningMessageText(), " Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour.");
+        verifyEqual(myAccount.getWarningMessageText(), AuthMessages.LOGIN_ACCOUNT_LOCKED_WARNING_WITH_LEADING_SPACE);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -203,7 +211,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         log.info("TC_02 - Step 04: Navigate to Forgot Password page");
         myAccount.clickContinueButtonInForgotPasswordPage();
         log.info("TC_02 - Step 05: Verify warning message text in Forgot Password page");
-        verifyEqual(myAccount.getWarningMessageTextInForgotPasswordPage(), "Warning: The E-Mail Address was not found in our records, please try again!");
+        verifyEqual(myAccount.getWarningMessageTextInForgotPasswordPage(), AuthMessages.FORGOT_PASSWORD_EMAIL_NOT_FOUND_WARNING);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -217,7 +225,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         verifyEqual(myAccount.getForgotPasswordPageTitleText(), "Forgot Your Password???????");
         myAccount.enterEmailToResetPassword("  " + email + "  ");
         myAccount.clickContinueButtonInForgotPasswordPage();
-        verifyEqual(myAccount.getWarningMessageTextInForgotPasswordPage(), "Warning: The E-Mail Address was not found in our records, please try again!");
+        verifyEqual(myAccount.getWarningMessageTextInForgotPasswordPage(), AuthMessages.FORGOT_PASSWORD_EMAIL_NOT_FOUND_WARNING);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -231,7 +239,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         verifyEqual(myAccount.getForgotPasswordPageTitleText(), "Forgot Your Password???????");
         myAccount.enterEmailToResetPassword(email.toUpperCase());
         myAccount.clickContinueButtonInForgotPasswordPage();
-        verifyEqual(myAccount.getSuccessMessageTextInForgotPasswordPage(), "An email with a confirmation link has been sent your email address.");
+        verifyEqual(myAccount.getSuccessMessageTextInForgotPasswordPage(), AuthMessages.LOGIN_CONFIRMATION_LINK_SENT);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -246,7 +254,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         verifyEqual(myAccount.getForgotPasswordPageTitleText(), "Forgot Your Password????????");
         myAccount.enterEmailToResetPassword("abc@abc");
         myAccount.clickContinueButtonInForgotPasswordPage();
-        verifyEqual(myAccount.getWarningMessageTextInForgotPasswordPage(), "Warning: The E-Mail Address was not found in our records, please try again!");
+        verifyEqual(myAccount.getWarningMessageTextInForgotPasswordPage(), AuthMessages.FORGOT_PASSWORD_EMAIL_NOT_FOUND_WARNING);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)
@@ -261,7 +269,7 @@ public class TC_Login_SoftAssert extends BaseTest {
         verifyEqual(myAccount.getForgotPasswordPageTitleText(), "Forgot Your Password?");
         myAccount.enterEmailToResetPassword("abcsdfsd@gmail.com");
         myAccount.clickContinueButtonInForgotPasswordPage();
-        verifyEqual(myAccount.getWarningMessageTextInForgotPasswordPage(), "Warning: The E-Mail Address was not found in our records, please try again!");
+        verifyEqual(myAccount.getWarningMessageTextInForgotPasswordPage(), AuthMessages.FORGOT_PASSWORD_EMAIL_NOT_FOUND_WARNING);
     }
 
     @JiraCreateIssue(isCreateIssue =  true)

@@ -3,8 +3,10 @@ package tests;
 import commons.BaseTest;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.*;
@@ -16,13 +18,15 @@ public class TC_Pagination extends BaseTest {
     protected MenuCategoryPO menuCategoryPage;
     protected SpecialPO specialPage;
 
-    @Parameters({"browserName", "url"})
+      @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
     @BeforeClass(alwaysRun = true)
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        menuCategoryPage = PageGenerator.getMenuCategoryPage(driver);
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        menuCategoryPage = PageGenerator.getMenuCategoryPage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
-
 
     
     //---UI---//
@@ -31,7 +35,7 @@ public class TC_Pagination extends BaseTest {
         
     }
 
-    @Test
+    @Test(groups = {"regression", "pagination"})
     public void TC_Verify_Pagination_Invisiblity_When_Have_One_Page() {
         //Product Category page co 1 trang
         menuCategoryPage.hoverToMegaMenu();
@@ -61,7 +65,7 @@ public class TC_Pagination extends BaseTest {
 
     }
 
-    @Test
+    @Test(groups = {"regression", "pagination"})
     public void TC_Verify_Pagination_Select_Page_Number() {
         //Product Category page co 3 trang
         menuCategoryPage.hoverToMegaMenu();
@@ -249,9 +253,5 @@ public class TC_Pagination extends BaseTest {
 
     }
 
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
-
+    
 }

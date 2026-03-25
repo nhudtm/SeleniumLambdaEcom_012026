@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
-<suite name="Lambda Ecommerce" parallel="tests" thread-count="3">
+<suite name="Lambda Ecommerce" parallel="tests" thread-count="2">
     <listeners>
         <listener class-name="reportConfig.AllureTestListener"/>
         <listener class-name="listeners.AnnotationTransformer"/>
@@ -11,9 +11,8 @@
         <parameter name="env" value="local"/>
         <!--        nếu run trên local thì value = local, các parameter bên dưới để vậy cũng không sao, local không cần-->
         <classes>
-           
-            <class name="tests.TC_Login"/>
-            <class name="tests.TC_Register"/>
+            <class name="tests.TC_Cart"/>
+            <class name="tests.TC_Compare"/>
             
         </classes>
     </test>
@@ -21,10 +20,9 @@
         <parameter name="browserName" value="hfirefox"/>
         <parameter name="env" value="local"/>
         <!--        nếu run trên local thì value = local, các parameter bên dưới để vậy cũng không sao, local không cần-->
-
         <classes>
-                        <class name="tests.TC_Login"/>
-                        <class name="tests.TC_Register"/>
+                        <class name="tests.TC_Cart"/>
+                        <class name="tests.TC_Compare"/>
             <class name="tests.TC_Cart"/>
         </classes>
     </test>

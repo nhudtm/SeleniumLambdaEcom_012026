@@ -5,7 +5,7 @@ import org.testng.ITestResult;
 
 public class RetryAnalyzer implements IRetryAnalyzer {
     private int retryCount = 0;
-    private static final int MAX_RETRY_COUNT = 2; // Ví dụ: Cho phép chạy lại tối đa 2 lần
+    private static final int MAX_RETRY_COUNT = 0; // Ví dụ: Cho phép chạy lại tối đa 2 lần
 
     @Override
     public boolean retry(ITestResult result) {

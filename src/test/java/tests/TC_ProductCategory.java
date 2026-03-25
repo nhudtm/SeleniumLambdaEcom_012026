@@ -7,8 +7,10 @@ import dataProviders.JsonDataProviders;
 import models.Product;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.MenuCategoryPO;
@@ -26,12 +28,14 @@ public class TC_ProductCategory extends BaseTest {
     protected ProductCategoryPO productCategoryPage;
     protected MenuCategoryPO menuCategoryPage;
 
-    @Parameters({"browserName", "url"})
-    @BeforeClass
-    public void beforeClass(String browser, String url) {
-
-        driver = getBrowserDriver(browser, url);
-        menuCategoryPage = PageGenerator.getMenuCategoryPage(driver);
+      @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        menuCategoryPage = PageGenerator.getMenuCategoryPage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
 
@@ -44,12 +48,12 @@ public class TC_ProductCategory extends BaseTest {
     // Kiểm tra info chi tiết sản phẩm -> TC product detail
 
 
-    @Test
+    @Test(groups = {"regression", "category"})
     public void TC_Verify_Product_List_Displayed_Map() {
         // Kiểm tra số lượng sản phẩm hiển thị đúng 75 sản phẩm - Số 75 có thể dựa vào FS hoặc API
         // Vào home -> Mega Menu -> Select 1 category
         // verify Category Title
-        // TC này ở bên com.lambda.TC_MegaMenu rồi ạ
+        // TC này ở bên com.lambda.TC_MegaMenu rồi 
         menuCategoryPage.hoverToMegaMenu();
         // Get list of all child items and verify
         List<String> allChildItemNames = menuCategoryPage.getAllChildItemsInMegaMenu(); // ie Apple, HTC, ...
@@ -265,9 +269,6 @@ public class TC_ProductCategory extends BaseTest {
     }
 
 
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
+    
 
 }

@@ -3,11 +3,14 @@ package tests;
 import commons.BaseTest;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.MenuCategoryPO;
+import pageObjects.PageGenerator;
 import pageObjects.ProductDetailPO;
 import pageObjects.SearchPO;
 
@@ -19,14 +22,17 @@ public class TC_Search extends BaseTest {
     protected SearchPO searchPage;
     protected ProductDetailPO productDetailPage;
 
-    @Parameters({"browserName", "url"})
-    @BeforeClass
-    public void beforeClass(String browser, String url) {
-        driver = getBrowserDriver(browser, url);
-        menuCategoryPage = pageObjects.PageGenerator.getMenuCategoryPage(driver);
+      @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+        menuCategoryPage = PageGenerator.getMenuCategoryPage(getDriver(context));
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
-    @Test
+    @Test(groups = {"regression", "search"})
     public void TC_01_Search_Empty_Data(){
         menuCategoryPage.enterTextInSearchBox("");
         searchPage = menuCategoryPage.clickSearchButton();
@@ -35,7 +41,7 @@ public class TC_Search extends BaseTest {
 
     }
 
-    @Test
+    @Test(groups = {"regression", "search"})
     public void TC_02_Search_Long_Keywords(){
         String longSearchText = "This is an extremely long search keyword that exceeds the maximum limit";
         menuCategoryPage.enterTextInSearchBox(longSearchText);
@@ -46,7 +52,7 @@ public class TC_Search extends BaseTest {
 
     }
 
-    @Test
+    @Test(groups = {"regression", "search"})
     public void TC_03_Search_Valid_Keywords(){
         String searchText = "iPhone";
         menuCategoryPage.enterTextInSearchBox(searchText);
@@ -185,9 +191,4 @@ public class TC_Search extends BaseTest {
     // Kiểm tra chức năng tìm kiếm với các từ khóa khác nhau, bao gồm cả từ khóa phổ biến và từ khóa không phổ biến.
     // Kiểm tra search với các category khác nhau (nếu có).
 
-
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
 }

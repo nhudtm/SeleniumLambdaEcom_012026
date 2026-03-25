@@ -1,18 +1,20 @@
 package tests;
 
-import commons.BaseTest;
-import models.Product;
+import java.util.List;
+
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+
+import commons.BaseTest;
+import models.Product;
 import pageObjects.CartPO;
 import pageObjects.ComparePO;
 import pageObjects.HomePO;
 import pageObjects.PageGenerator;
-import java.util.List;
 
 public class TC_Compare extends BaseTest {
     HomePO homePage;
@@ -23,13 +25,13 @@ public class TC_Compare extends BaseTest {
     @BeforeClass(alwaysRun = true)
     public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
             @Optional String os, @Optional String osVersion, String url, ITestContext context) {
-        getBrowserDriver2(env, browserName, browserVersion, os, osVersion, url, context);
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
         homePage = PageGenerator.getHomepage(getDriver(context));
         System.out.println(
                 "Thread id beforeClass TC_Compare: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
-    @Test
+    @Test(groups = {"regression", "compare"})
     public void TC_01_Add_To_Compare_Popup_1_Product() {
         log.info("TC_01_Add_To_Compare_Popup_1_Product ");
         int numOfProduct = 1;
@@ -130,7 +132,7 @@ public class TC_Compare extends BaseTest {
     removeProductFromCompare(homePage,4);
     }
 
-    @Test
+    @Test(groups = {"regression", "compare"})
     public void TC_09_Compare_Page_Remove_1_Product() {
         log.info("TC_09_Compare_Page_Remove_1_Product ");
         int numOfProduct = 1;

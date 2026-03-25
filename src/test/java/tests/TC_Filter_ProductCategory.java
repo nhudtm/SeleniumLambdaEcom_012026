@@ -9,8 +9,9 @@ import dataProviders.FilterColorDataProvider;
 import dataProviders.FilterDataProviders;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
+import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pageObjects.MenuCategoryPO;
@@ -26,12 +27,14 @@ public class TC_Filter_ProductCategory extends BaseTest {
     protected ProductCategoryPO productCategoryPage;
     protected MenuCategoryPO menuCategoryPage;
 
-    @Parameters({"browserName", "url"})
+    @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
     @BeforeClass(alwaysRun = true)
-    public void beforeClass(String browser, String url) {
-
-        driver = getBrowserDriver(browser, url);
-        menuCategoryPage = PageGenerator.getMenuCategoryPage(driver);
+    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+            @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
+         menuCategoryPage = PageGenerator.getMenuCategoryPage(getDriver(context));
+        log.info(
+                "Thread id beforeClass : " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
 
@@ -43,7 +46,7 @@ public class TC_Filter_ProductCategory extends BaseTest {
     }
 
     //---Function---//
-    @Test
+    @Test(groups = {"regression", "filter"})
     public void TC_Verify_Default_Filter_Price() {
         // Access to category page
         String defaultMinPrice = "122";
@@ -89,7 +92,7 @@ public class TC_Filter_ProductCategory extends BaseTest {
     }
 
 
-    @Test
+    @Test(groups = {"regression", "filter"})
     public void TC_Verify_Price_Filter_Reset() {
         //After clear filter
         String defaultMinPrice = "122";
@@ -207,7 +210,7 @@ public class TC_Filter_ProductCategory extends BaseTest {
         filter.filterByInputPriceRange(minPrice, maxPrice);
         productCategoryPage.waitForLoadingIconUndisplayed();
         while (true) {
-            System.out.println("----- Verify products in page -----");
+            
             List<ProductComponent> productListInPage = productCategoryPage.getAllProductsInPage();
             FilterHelper.verifyFilterByPrice(defaultMinPrice, defaultMaxPrice, productListInPage);
             if (productCategoryPage.isNextPageButtonUndisplayed()) {
@@ -233,7 +236,7 @@ public class TC_Filter_ProductCategory extends BaseTest {
         filter.filterByInputPriceRange(minPrice, maxPrice);
 
         while (true) {
-            System.out.println("----- Verify products in page -----");
+            
             productCategoryPage.waitForLoadingIconUndisplayed();
             List<ProductComponent> productListInPage = productCategoryPage.getAllProductsInPage();
             FilterHelper.verifyFilterByPrice(defaultMinPrice, defaultMaxPrice, productListInPage);
@@ -257,7 +260,7 @@ public class TC_Filter_ProductCategory extends BaseTest {
         filter.filterByInputPriceRange(minPrice, maxPrice);
 
         while (true) {
-            System.out.println("----- Verify products in page -----");
+            
             productCategoryPage.waitForLoadingIconUndisplayed();
             List<ProductComponent> productListInPage = productCategoryPage.getAllProductsInPage();
             FilterHelper.verifyFilterByPrice(minPrice, maxPrice, productListInPage);
@@ -329,9 +332,6 @@ public class TC_Filter_ProductCategory extends BaseTest {
         // Verify products in page - if have expected data.
     }
 
-    @AfterClass
-    public void afterClass() {
-        closeBrowserDriver();
-    }
+ 
 
 }

@@ -7,10 +7,6 @@ public class PageGenerator {
         return new HomePO(driver);
     }
 
-    public static LoginPO getLoginPage(WebDriver driver) {
-        return new LoginPO(driver);
-    }
-
     public static RegisterPO getRegisterPage(WebDriver driver) {
         return new RegisterPO(driver);
     }

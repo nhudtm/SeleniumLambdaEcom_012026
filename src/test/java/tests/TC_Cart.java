@@ -13,10 +13,8 @@ import commons.BaseTest;
 import pageObjects.CartPO;
 import pageObjects.HomePO;
 import pageObjects.PageGenerator;
-import pageUIs.CartUI;
 
 public class TC_Cart extends BaseTest {
-
     HomePO homePage;
     CartPO cart;
 
@@ -24,10 +22,10 @@ public class TC_Cart extends BaseTest {
     @BeforeClass(alwaysRun = true)
     public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
             @Optional String os, @Optional String osVersion, String url, ITestContext context) {
-        getBrowserDriver2(env, browserName, browserVersion, os, osVersion, url, context);
+        getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
         homePage = PageGenerator.getHomepage(getDriver(context));
-        System.out.println(
-                "Thread id beforeClass TC_Cart: " + Thread.currentThread().getId() + " - " + getDriver().toString());
+        log.info(
+                "Thread id beforeClass: " + Thread.currentThread().getId() + " - " + getDriver().toString());
     }
 
     // 1. Access to Shopping Cart/ Check out page: From Cart Icon, From Add to Cart
@@ -42,9 +40,8 @@ public class TC_Cart extends BaseTest {
     // 6. Update quantity of product in Cart/ Check out page
 
    
-    @Test
+    @Test(groups = {"regression", "cart"})
     public void TC_01_View_Empty_Cart() {
-        System.out.println("Thread id TC_01: " + Thread.currentThread().getId() + " - " + getDriver().toString());
         cart = homePage.clickCartIcon();
         Assert.assertTrue(cart.isShoppingCartDrawerDisplayed());
         cart.clickCheckoutButtonInCartDrawer();
@@ -54,9 +51,8 @@ public class TC_Cart extends BaseTest {
     }
 
 
-    @Test
+    @Test(groups = {"regression", "cart"})
     public void TC_02_Add_To_Cart_Popup_1_Product() {
-        System.out.println("Thread id TC_02: " + Thread.currentThread().getId() + " - " + getDriver().toString());
         int numOfProduct = 1;
         addProductToCartAndVerifyPopup(numOfProduct);
 
@@ -71,7 +67,6 @@ public class TC_Cart extends BaseTest {
 
     @Test
     public void TC_03_Verify_Shopping_Cart_Page_1_Product() {
-        System.out.println("Thread id TC_03: " + Thread.currentThread().getId() + " - " + getDriver().toString());
         Map<String, String> productInfo = getProductInfo(homePage, 2);
         homePage.hoverToProductInCollectionPopular(2);
         homePage.clickAddToCartInCollectionPopular(2);
@@ -84,7 +79,6 @@ public class TC_Cart extends BaseTest {
 
     @Test
     public void TC_04_Verify_Shopping_Cart_Page_2_Product() {
-        System.out.println("Thread id TC_04: " + Thread.currentThread().getId() + " - " + getDriver().toString());
         Map<String, String> productInfo1 = getProductInfo(homePage, 2);
         Map<String, String> productInfo2 = getProductInfo(homePage, 4);
         addProductToCartAndGoToCartPage(2);
@@ -104,7 +98,6 @@ public class TC_Cart extends BaseTest {
 
     @Test
     public void TC_05_Update_Quantity_Valid() {
-        System.out.println("Thread id TC_05: " + Thread.currentThread().getId() + " - " + getDriver().toString());
         addProductToCartAndGoToCartPage(2);
         int updateQuantity = 5;
         cart.inputQuantityInCartPage(1, updateQuantity);
@@ -141,15 +134,14 @@ public class TC_Cart extends BaseTest {
     
     @Test
     public void TC_08_Verify_Total_Price_Calculation_Quantity_1() {
-        System.out.println("Thread id TC_08: " + Thread.currentThread().getId() + " - " + getDriver().toString());
         int productIndex = 2;
         addProductToCartAndGoToCartPage(productIndex);
         int quantity = 1;
         float unitPrice = Float.parseFloat(cart.getProductUnitPriceInCartTable(1).replace("$", ""));
         float expectedTotalPrice = unitPrice * quantity;
         float totalPrice = Float.parseFloat(cart.getProductTotalPriceInCartTable(1).replace("$", ""));
-        System.out.println(unitPrice);
-        System.out.println(totalPrice);
+        log.info("Unit price: " + unitPrice);
+        log.info("Total price: " + totalPrice);
         Assert.assertEquals(totalPrice, expectedTotalPrice, 0.001);
         cart.clickRemoveProductByNumber(1);
         homePage = cart.clickHomeMenuItem();
@@ -157,7 +149,6 @@ public class TC_Cart extends BaseTest {
 
     @Test
     public void TC_9_Verify_Tax_And_Subtotal_1_Product_Quantity_1() throws InterruptedException {
-        System.out.println("Thread id TC_9: " + Thread.currentThread().getId() + " - " + getDriver().toString());
         // Công thức tính đại, nên có thể sai, testcase sẽ fail
         addProductToCartAndGoToCartPage(2);
         int quantity = 1;
@@ -182,7 +173,6 @@ public class TC_Cart extends BaseTest {
 
     @Test
     public void TC_10_Verify_Total_Price_Calculation_Quantity_5() {
-        System.out.println("Thread id TC_10: " + Thread.currentThread().getId() + " - " + getDriver().toString());
         // Add 2nd product in Popular collection to cart and go to cart page
         addProductToCartAndGoToCartPage(2);
         int updateQuantity = 5;
@@ -193,9 +183,9 @@ public class TC_Cart extends BaseTest {
         float unitPrice = Float.parseFloat(cart.getProductUnitPriceInCartTable(1).replace("$", ""));
         float expectedTotalPrice = unitPrice * updateQuantity;
         float totalPrice = Float.parseFloat(cart.getProductTotalPriceInCartTable(1).replace("$", ""));
-        System.out.println("unit price: " + unitPrice);
-        System.out.println("actual total price: " + totalPrice);
-        System.out.println("expected total price: " + expectedTotalPrice);
+        log.info("Unit price: " + unitPrice);
+        log.info("Actual total price: " + totalPrice);
+        log.info("Expected total price: " + expectedTotalPrice);
         Assert.assertEquals(totalPrice, expectedTotalPrice, 0.001);
         cart.clickRemoveProductByNumber(1);
         homePage.clickHomeMenuItem();
