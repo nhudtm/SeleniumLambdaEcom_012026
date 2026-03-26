@@ -92,7 +92,7 @@ public class TC_Filter_ProductCategory extends BaseTest {
     }
 
 
-    @Test(groups = {"regression", "filter"})
+    @Test(groups = {"regression", "filter","debug"})
     public void TC_Verify_Price_Filter_Reset() {
         //After clear filter
         String defaultMinPrice = "122";

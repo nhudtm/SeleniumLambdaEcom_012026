@@ -52,8 +52,8 @@ public class MenuCategoryUI {
     public static final String ADD_ONS_WIDGETS_LINK = "xpath=//ul[contains(@class,'dropdown-menu show')]//span[contains(text(),'Widgets')]" ;
 
 
-    public static final String MEGA_MENU_ALL_CHILD_ITEMS = "xpath=//div[contains(@class,'menu-items')]//li[@class='nav-item']/a" ;
-    public static final String DYNAMIC_MEGA_MENU_CHILD_ITEM = "xpath=//div[contains(@class,'menu-items')]//li[@class='nav-item']/a[@title='%s']";
+    public static final String MEGA_MENU_ALL_CHILD_ITEMS = "xpath=//div[contains(@class,'menu-items')]//li[contains(@class,'nav-item')]/a" ;
+    public static final String DYNAMIC_MEGA_MENU_CHILD_ITEM = "xpath=//div[contains(@class,'menu-items')]//li[contains(@class,'nav-item')]/a[@title='%s']";
     public static final String DYNAMIC_PRODUCT_TITLE = "xpath=//h1[text()='%s']" ;
 
     public static final String AUTO_SUGGEST_LIST_PARENT = "xpath=//div[@id='entry_217822']//ul[contains(@class,'dropdown')]";

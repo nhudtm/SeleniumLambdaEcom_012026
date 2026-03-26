@@ -31,7 +31,7 @@ public class TC_MegaMenu extends BaseTest {
     }
 
     // 75p
-    @Test(groups = {"regression", "megamenu"})
+    @Test(groups = {"regression", "megamenu","debug"})
     public void TC_Verify_MegaMenu_Items(){
         // Test case này để kiểm tra điều hướng khi click vào từng item trong Mega Menu
         // Hover Mega Menu

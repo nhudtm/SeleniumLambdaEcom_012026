@@ -60,7 +60,7 @@ public class TC_ProductDetail_2 extends BaseTest {
 //
 //    }
 
-    @Test(groups = {"regression", "productDetail"})
+    @Test(groups = {"regression", "productDetail","debug"})
     public void TC_Submit_Review_Success() {
         String name = "abc";
         String reviewText = generateRandomNumber() + "This is an automated."; //25 characters

@@ -11,9 +11,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.MoveTargetOutOfBoundsException;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -207,11 +211,35 @@ public class BasePage {
     }
 
     public boolean isElementDisplayed(  String locator) {
-        return getElement(  locator).isDisplayed();
+        return isElementDisplayedWithRetry(locator);
     }
 
     public boolean isElementDisplayed( String locator, String... params) {
-        return getElement(  castParameter(locator, params)).isDisplayed();
+        return isElementDisplayedWithRetry(castParameter(locator, params));
+    }
+
+    private boolean isElementDisplayedWithRetry(String locator) {
+        final int maxAttempts = 3;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                return getElement(locator).isDisplayed();
+            } catch (NoSuchElementException e) {
+                return false;
+            } catch (StaleElementReferenceException e) {
+                if (attempt == maxAttempts) {
+                    return false;
+                }
+                sleepInSecond(1);
+            } catch (WebDriverException e) {
+                String message = e.getMessage();
+                boolean isDetachedNode = message != null && message.contains("does not belong to the document");
+                if (!isDetachedNode || attempt == maxAttempts) {
+                    throw e;
+                }
+                sleepInSecond(1);
+            }
+        }
+        return false;
     }
 
     public boolean isElementSelected( String locator) {
@@ -501,13 +529,44 @@ public class BasePage {
     // ------ACTIONS------/
     // hover
     public void hoverToElement( String locator) {
-        Actions action = new Actions(driver);
-        action.moveToElement(getElement(  locator)).perform();
+        hoverToElementInternal(getElement(locator));
     }
 
     public void hoverToElement( String locator, String... params) {
-        Actions action = new Actions(driver);
-        action.moveToElement(getElement(  castParameter(locator, params))).perform();
+        hoverToElementInternal(getElement(castParameter(locator, params)));
+    }
+
+    private void hoverToElementInternal(WebElement element) {
+        try {
+            scrollElementIntoViewCenter(element);
+            Actions action = new Actions(driver);
+            action.moveToElement(element).perform();
+        } catch (MoveTargetOutOfBoundsException e) {
+            hoverToElementByJS(element);
+        } catch (WebDriverException e) {
+            String message = e.getMessage();
+            boolean isOutOfBounds = message != null && message.toLowerCase().contains("out of bounds");
+            if (isOutOfBounds) {
+                hoverToElementByJS(element);
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private void hoverToElementByJS(WebElement element) {
+        scrollElementIntoViewCenter(element);
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].dispatchEvent(new MouseEvent('mouseover', {bubbles:true, cancelable:true, view:window}));",
+                element
+        );
+    }
+
+    private void scrollElementIntoViewCenter(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block:'center', inline:'center'});",
+                element
+        );
     }
 
     // double click
@@ -576,13 +635,11 @@ public class BasePage {
 
     // scroll to element
     public void scrollToElement( String locator) {
-        Actions action = new Actions(driver);
-        action.scrollToElement(getElement(  locator)).perform();
+        scrollElementIntoViewCenter(getElement(locator));
     }
 
     public void scrollToElement( String locator, String... params) {
-        Actions action = new Actions(driver);
-        action.scrollToElement(getElement(  castParameter(locator, params))).perform();
+        scrollElementIntoViewCenter(getElement(castParameter(locator, params)));
     }
 
     // press key

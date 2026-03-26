@@ -65,7 +65,7 @@ public class TC_Pagination extends BaseTest {
 
     }
 
-    @Test(groups = {"regression", "pagination"})
+    @Test(groups = {"regression", "pagination","debug"})
     public void TC_Verify_Pagination_Select_Page_Number() {
         //Product Category page co 3 trang
         menuCategoryPage.hoverToMegaMenu();
