@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Lambda Ecommerce Playground">
+<suite name="Lambda Ecommerce Playground" parallel="tests" thread-count="2">
     <listeners>
         <listener class-name="reportConfig.AllureTestListener"/>
         <listener class-name="listeners.AnnotationTransformer"/>
@@ -10,12 +10,11 @@
         <parameter name="browserName" value="hchrome"/>
         <parameter name="env" value="local"/>
         <parameter name="url" value="https://ecommerce-playground.lambdatest.io"/>
-        <groups>
+        <!-- <groups>
             <run>
                 <include name="regression"/>
-               
             </run>
-        </groups>
+        </groups> -->
       
         <classes>
             <class name="tests.TC_Home"/>
@@ -32,18 +31,18 @@
             <class name="tests.TC_ProductActionFromHome"/>
             <class name="tests.TC_Pagination"/>
             <class name="tests.TC_WishList"/>
-             <class name="tests.TC_ProductCategory"/>
+            <class name="tests.TC_ProductCategory"/>
         </classes>
     </test>
     <test name="Run on Headless Firefox">
         <parameter name="browserName" value="hfirefox"/>
         <parameter name="env" value="local"/>
         <parameter name="url" value="https://ecommerce-playground.lambdatest.io"/>
-        <groups>
+        <!-- <groups>
             <run>
                 <include name="regression"/>
             </run>
-        </groups>
+        </groups> -->
       
         <classes>
             <class name="tests.TC_Home"/>
@@ -60,7 +59,7 @@
             <class name="tests.TC_ProductActionFromHome"/>
             <class name="tests.TC_Pagination"/>
             <class name="tests.TC_WishList"/>
-             <class name="tests.TC_ProductCategory"/>
+            <class name="tests.TC_ProductCategory"/>
         </classes>
     </test>
 </suite>

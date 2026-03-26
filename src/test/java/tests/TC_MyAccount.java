@@ -31,7 +31,7 @@ public class TC_MyAccount extends BaseTest {
 
     @Parameters({"env", "browserName", "browserVersion", "os", "osVersion", "url"})
     @BeforeClass(alwaysRun = true)
-    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion, @Optional String os, @Optional String osVersion, String url, ITestContext context) {
+    public void beforeClass( String env, @Optional("chrome") String browserName, @Optional String browserVersion, @Optional String os, @Optional String osVersion, String url, ITestContext context) {
         getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
         homePage = PageGenerator.getHomepage(getDriver(context));
         log.info("Thread id beforeClass TC_Login: " + Thread.currentThread().getId() + " - " + getDriver().toString());
