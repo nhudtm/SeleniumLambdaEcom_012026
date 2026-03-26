@@ -1,6 +1,9 @@
 # Selenium Automation test - LambdaEcommerce Website
 
 [![Execute Selenium UI Tests](https://github.com/nhudtm/SeleniumLambdaEcom_012026/actions/workflows/run-test.yml/badge.svg)](https://github.com/nhudtm/SeleniumLambdaEcom_012026/actions/workflows/run-test.yml)
+[![Tests Passed](https://img.shields.io/endpoint?url=https://nhudtm.github.io/SeleniumLambdaEcom_012026/badges/passed.json)](https://github.com/nhudtm/SeleniumLambdaEcom_012026/actions/workflows/run-test.yml)
+[![Tests Failed](https://img.shields.io/endpoint?url=https://nhudtm.github.io/SeleniumLambdaEcom_012026/badges/failed.json)](https://github.com/nhudtm/SeleniumLambdaEcom_012026/actions/workflows/run-test.yml)
+[![Tests Total](https://img.shields.io/endpoint?url=https://nhudtm.github.io/SeleniumLambdaEcom_012026/badges/total.json)](https://github.com/nhudtm/SeleniumLambdaEcom_012026/actions/workflows/run-test.yml)
 
 Project: Automated UI tests for a sample e-commerce site (Lambda Ecommerce) using Selenium WebDriver and TestNG, organized with the Page Object Model.
 

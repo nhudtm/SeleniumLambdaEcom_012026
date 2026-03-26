@@ -53,6 +53,56 @@ jobs:
       if: always()
       run: mvn allure:report
 
+    - name: Generate pass/fail count badges
+      if: always()
+      run: |
+        python3 - <<'PY'
+        import glob
+        import json
+        import os
+        import xml.etree.ElementTree as ET
+
+        report_dir = "target/surefire-reports"
+        xml_files = glob.glob(os.path.join(report_dir, "TEST-*.xml"))
+
+        total = failures = errors = skipped = 0
+
+        for path in xml_files:
+            try:
+                root = ET.parse(path).getroot()
+                tests = int(root.attrib.get("tests", 0))
+                f = int(root.attrib.get("failures", 0))
+                e = int(root.attrib.get("errors", 0))
+                s = int(root.attrib.get("skipped", 0))
+                total += tests
+                failures += f
+                errors += e
+                skipped += s
+            except Exception:
+                pass
+
+        failed = failures + errors
+        passed = max(total - failed - skipped, 0)
+
+        badges_dir = "target/site/allure-maven-plugin/badges"
+        os.makedirs(badges_dir, exist_ok=True)
+
+        def write_badge(filename, label, message, color):
+            payload = {
+                "schemaVersion": 1,
+                "label": label,
+                "message": str(message),
+                "color": color,
+            }
+            with open(os.path.join(badges_dir, filename), "w", encoding="utf-8") as f:
+                json.dump(payload, f)
+
+        write_badge("passed.json", "tests passed", passed, "brightgreen" if passed > 0 else "lightgrey")
+        write_badge("failed.json", "tests failed", failed, "red" if failed > 0 else "brightgreen")
+        write_badge("skipped.json", "tests skipped", skipped, "yellow")
+        write_badge("total.json", "tests total", total, "blue")
+        PY
+
     - name: Upload Pages Artifact
       if: always()
       uses: actions/upload-pages-artifact@v3
