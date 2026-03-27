@@ -225,13 +225,6 @@ waitForAllElementPresence(locator);     // Multiple elements
 ✅ Framework-managed timeouts — respects GlobalConstants  
 ✅ Smart retry logic — automatic in CI/CD
 
-### Retry Policy
-Intelligent retry mechanism in `RetryAnalyzer.java`:
-- Detects environment: CI/CD via GitHub Actions, Jenkins, GitLab, or system property
-- Local: 1 retry (max 2 attempts total)
-- CI/CD: 2 retries (max 3 attempts total)
-- Logs retry attempts with environment context
-
 ### Parallel Execution
 - ThreadLocal-based WebDriver per thread
 - Safe cleanup via `quit()` and `remove()`
@@ -263,10 +256,6 @@ For dynamic content:
 - Apply case-insensitive matching with `translate()`
 - Normalize URLs (lowercase + replace %2f encoding)
 
-## Project Documentation
-- **[copilot-instructions.md](copilot-instructions.md)**: AI-assistant guidelines & project context
-- **Build config**: [pom.xml](pom.xml) with all dependencies and Maven plugins
-
 ## Quick Links
 
 | Resource | Purpose |
@@ -278,4 +267,4 @@ For dynamic content:
 ---
 
 **Last Updated**: March 2026  
-**Status**: Production-ready with 30+ stable blog test cases
+**Status**: Production-ready with 140+ stable test cases
