@@ -1,14 +1,12 @@
 package tests;
 
 import java.util.Map;
-
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-
 import commons.BaseTest;
 import pageObjects.CartPO;
 import pageObjects.HomePO;

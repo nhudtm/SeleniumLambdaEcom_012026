@@ -96,10 +96,7 @@ public class BaseTest {
         if (browser == BrowserList.MOBILE_CHROME || browser == BrowserList.MOBILE_SAFARI) {
             // do nothing
         } else {
-            driver.manage().window().maximize();
-            if (browserName.toLowerCase().startsWith("h")) {
-                driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
-            }
+            configureDesktopWindowSafely(driver, browserName);
         }
         driver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         return driver;
@@ -129,10 +126,7 @@ public class BaseTest {
         WebDriver driver = tDriver.get();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         if (!browserName.toLowerCase().contains("mobile")) {
-            driver.manage().window().maximize();
-            if (browserName.toLowerCase().startsWith("h")) {
-                driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
-            }
+            configureDesktopWindowSafely(driver, browserName);
         }
         driver.get(url);
         return driver;
@@ -168,11 +162,7 @@ public class BaseTest {
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         if (!browserName.toLowerCase().contains("mobile")) {
-            driver.manage().window().maximize();
-            // Set specific size for headless browsers to prevent layout issues
-            if (browserName.toLowerCase().startsWith("h")) {
-                driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
-            }
+            configureDesktopWindowSafely(driver, browserName);
         }
         driver.get(url);
 
@@ -247,13 +237,26 @@ public class BaseTest {
         }
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         if (!browserName.toLowerCase().contains("mobile")) {
-            driver.manage().window().maximize();
-            if (browserName.toLowerCase().startsWith("h")) {
-                driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
-            }
+            configureDesktopWindowSafely(driver, browserName);
         }
         driver.get(url);
         return driver;
+    }
+
+    private void configureDesktopWindowSafely(WebDriver driver, String browserName) {
+        final org.openqa.selenium.Dimension defaultDesktopSize = new org.openqa.selenium.Dimension(1920, 1080);
+        try {
+            driver.manage().window().maximize();
+        } catch (Exception e) {
+            log.warn("Window maximize failed for browser {}. Falling back to fixed size. Root cause: {}", browserName,
+                    e.getMessage());
+            driver.manage().window().setSize(defaultDesktopSize);
+            return;
+        }
+
+        if (browserName.toLowerCase().startsWith("h")) {
+            driver.manage().window().setSize(defaultDesktopSize);
+        }
     }
 
     /** Close driver basic (local not threadsafe) */

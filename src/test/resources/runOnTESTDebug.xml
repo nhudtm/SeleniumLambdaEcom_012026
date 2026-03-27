@@ -11,20 +11,18 @@
 
 <groups>
     <run>
-        <include name="debug"/>
+        <include name="regression"/>
     </run>
 </groups>
-    <test name="Run on Firefox">
-        <parameter name="browserName" value="firefox"/>
+    <test name="Run on Chrome">
+        <parameter name="browserName" value="chrome"/>
         <parameter name="env" value="local"/>
         <classes>
-                                   <class name="tests.TC_MegaMenu"/>
+                                   <class name="tests.TC_Blog"/>
             <!-- <class name="tests.TC_Filter_ProductCategory"/>
                                    <class name="tests.TC_ProductDetail_2"/>
             <class name="tests.TC_Pagination"/> -->
    
         </classes>
     </test>
-
-
 </suite>
