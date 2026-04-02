@@ -1,12 +1,29 @@
 package pageObjects;
 
-import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
+
+import io.qameta.allure.Step;
 import pageUIs.MyAccountUI;
 
 public class MyAccountPO extends MenuCategoryPO {
     public MyAccountPO(WebDriver driver) {
         super(driver);
+    }
+
+    @Step("Login with email {0}")
+    public MyAccountPO login(String email, String password) {
+        inputToEmailTextbox(email);
+        inputToPasswordTextbox(password);
+        clickLoginButton();
+        return PageGenerator.getMyAccountPage(driver);
+    }
+
+
+    // Viết hàm register sau khi vào register page
+    public MyAccountPO register(String firstName, String lastName, String email, String phone, String password, boolean isNewsletterYes) {
+        RegisterPO registerPage = clickContinueButton();
+        registerPage.register(firstName, lastName, email, phone, password, isNewsletterYes);
+        return PageGenerator.getMyAccountPage(driver);
     }
 
     @Step("Click to Continue button to go to register page")
@@ -18,6 +35,8 @@ public class MyAccountPO extends MenuCategoryPO {
         return PageGenerator.getRegisterPage(driver);
     }
 
+    
+
     @Step("Check My Account link is displayed")
     public boolean isMyAccountLinkDisplayed() {
         String url = getPageURL();
@@ -26,8 +45,8 @@ public class MyAccountPO extends MenuCategoryPO {
 
     @Step("Check My Account title is displayed")
     public boolean isMyAccountTitleDisplayed() {
-        waitForElementVisible(  MyAccountUI.MY_ACCOUNT_TITLE);
-        return isElementDisplayed(  MyAccountUI.MY_ACCOUNT_TITLE);
+        waitForElementVisible(MyAccountUI.MY_ACCOUNT_TITLE);
+        return isElementDisplayed(MyAccountUI.MY_ACCOUNT_TITLE);
     }
 
     @Step("Click to '{0}' in Account right menu")
@@ -38,8 +57,8 @@ public class MyAccountPO extends MenuCategoryPO {
 
     @Step("Check Login form is displayed")
     public boolean isLoginFormDisplayed() {
-        waitForElementVisible(  MyAccountUI.LOGIN_FORM_TITLE);
-        return isElementDisplayed(  MyAccountUI.LOGIN_FORM_TITLE);
+        waitForElementVisible(MyAccountUI.LOGIN_FORM_TITLE);
+        return isElementDisplayed(MyAccountUI.LOGIN_FORM_TITLE);
     }
 
     @Step("Input to Email textbox with value is {0}")
@@ -62,8 +81,11 @@ public class MyAccountPO extends MenuCategoryPO {
 
     @Step("Get warning message text")
     public String getWarningMessageText() {
-        waitForElementVisible(  MyAccountUI.WARNING_MESSAGE);
-        return getElementText(  MyAccountUI.WARNING_MESSAGE);
+        overrideGlobalTimeout(5);
+        boolean isDisplayed = isElementDisplayed(MyAccountUI.WARNING_MESSAGE);
+        String text = isDisplayed ? getElementText(MyAccountUI.WARNING_MESSAGE) : "";
+        overrideGlobalTimeout(commons.GlobalConstants.LONG_TIMEOUT);
+        return text;
     }
 
 

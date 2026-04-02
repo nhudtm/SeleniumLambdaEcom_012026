@@ -43,13 +43,13 @@ public class HomePO extends MenuCategoryPO {
 
     @Step("Click Add to Cart button in Product Action")
     public void clickToAddToCartButtonInProductAction() {
-        waitForElementClickable(HomeUI.ACTION_ADD_TO_CART);
+        waitForElementPresence(HomeUI.ACTION_ADD_TO_CART);
         clickToElementByJS(HomeUI.ACTION_ADD_TO_CART);
     }
 
     @Step("Click to Add to Wish List button in Product Action")
     public void clickToAddToWishListButtonInProductAction() {
-        waitForElementClickable(HomeUI.ACTION_ADD_TO_WISHLIST);
+        waitForElementPresence(HomeUI.ACTION_ADD_TO_WISHLIST);
         clickToElementByJS(HomeUI.ACTION_ADD_TO_WISHLIST);
     }
 
@@ -67,7 +67,7 @@ public class HomePO extends MenuCategoryPO {
 
     @Step("Click to Add to Compare button in Product Action")
     public void clickToAddToCompareButtonInProductAction() {
-        waitForElementClickable(HomeUI.ACTION_ADD_TO_COMPARE);
+        waitForElementPresence(HomeUI.ACTION_ADD_TO_COMPARE);
         clickToElementByJS(HomeUI.ACTION_ADD_TO_COMPARE);
     }
 

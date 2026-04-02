@@ -553,6 +553,10 @@ public class BaseTest {
         Assert.assertEquals(actual, expected, context);
     }
 
+    protected void assertNotEqualsWithMessage(Object actual, Object expected, String context) {
+        Assert.assertNotEquals(actual, expected, context);
+    }
+
     protected void assertTrueWithMessage(boolean condition, String context) {
         Assert.assertTrue(condition, context);
     }

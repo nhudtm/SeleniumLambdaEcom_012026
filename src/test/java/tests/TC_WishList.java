@@ -32,7 +32,7 @@ public class TC_WishList extends BaseTest {
 
     @Parameters({ "env", "browserName", "browserVersion", "os", "osVersion", "url" })
     @BeforeClass(alwaysRun = true)
-    public void beforeClass(String env, @Optional String browserName, @Optional String browserVersion,
+    public void beforeClass(String env, @Optional("chrome") String browserName, @Optional String browserVersion,
             @Optional String os, @Optional String osVersion, String url, ITestContext context) {
         getBrowserDriverWithContext(env, browserName, browserVersion, os, osVersion, url, context);
         homePage = PageGenerator.getHomepage(getDriver(context));
@@ -43,13 +43,14 @@ public class TC_WishList extends BaseTest {
         password = PropertiesConfig.getProp("test.password");
     }
 
-    @Test(groups = { "regression", "wishlist" })
+    @Test(groups = { "regression", "wishlist", "debug"})
     public void TC_01_Add_To_WishList_Popup_1_Product() {
         // Login
         myAccount = homePage.clickMyAccountMenuItem();
-        myAccount.inputToEmailTextbox(email);
-        myAccount.inputToPasswordTextbox(password);
-        myAccount.clickLoginButton();
+        // myAccount.inputToEmailTextbox(email);
+        // myAccount.inputToPasswordTextbox(password);
+        // myAccount.clickLoginButton();
+        myAccount.login(email, password);
 
         // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();
@@ -66,9 +67,7 @@ public class TC_WishList extends BaseTest {
         int numOfProduct = 2;
         // Login
         myAccount = homePage.clickMyAccountMenuItem();
-        myAccount.inputToEmailTextbox(email);
-        myAccount.inputToPasswordTextbox(password);
-        myAccount.clickLoginButton();
+        myAccount.login(email, password);
 
         // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();
@@ -85,9 +84,7 @@ public class TC_WishList extends BaseTest {
         int numOfProduct = 4;
         // Login
         myAccount = homePage.clickMyAccountMenuItem();
-        myAccount.inputToEmailTextbox(email);
-        myAccount.inputToPasswordTextbox(password);
-        myAccount.clickLoginButton();
+        myAccount.login(email, password);
 
         // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();
@@ -103,9 +100,7 @@ public class TC_WishList extends BaseTest {
     public void TC_05_Verify_WishList_Page_0_Product() {
         // Login
         myAccount = homePage.clickMyAccountMenuItem();
-        myAccount.inputToEmailTextbox(email);
-        myAccount.inputToPasswordTextbox(password);
-        myAccount.clickLoginButton();
+        myAccount.login(email, password);
 
         wishListPage = homePage.clickWishListIconWithLoggedIn();
         removeAllProductInWishList();
@@ -120,9 +115,7 @@ public class TC_WishList extends BaseTest {
 
         // Login
         myAccount = homePage.clickMyAccountMenuItem();
-        myAccount.inputToEmailTextbox(email);
-        myAccount.inputToPasswordTextbox(password);
-        myAccount.clickLoginButton();
+        myAccount.login(email, password);
 
         // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();
@@ -139,9 +132,7 @@ public class TC_WishList extends BaseTest {
 
         // Login
         myAccount = homePage.clickMyAccountMenuItem();
-        myAccount.inputToEmailTextbox(email);
-        myAccount.inputToPasswordTextbox(password);
-        myAccount.clickLoginButton();
+        myAccount.login(email, password);
 
         // Go to wishlist page and remove all product if have
         wishListPage = myAccount.clickWishListIconWithLoggedIn();

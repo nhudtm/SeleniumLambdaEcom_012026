@@ -1,12 +1,13 @@
 package pageObjects;
 
-import utils.DBUtils;
-import models.Product;
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import pageUIs.ProductDetailUI;
 
-import java.util.List;
+import models.Product;
+import pageUIs.ProductDetailUI;
+import utils.DBUtils;
 
 public class ProductDetailPO extends MenuCategoryPO {
 
@@ -265,4 +266,6 @@ public class ProductDetailPO extends MenuCategoryPO {
         waitForElementVisible(  ProductDetailUI.REVIEW_WARNING_MESSAGE);
         return getElementText(  ProductDetailUI.REVIEW_WARNING_MESSAGE);
     }
+
+    
 }

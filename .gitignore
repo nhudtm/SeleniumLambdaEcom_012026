@@ -69,4 +69,6 @@ test-output/
 
 ### Files
 COMPREHENSIVE_CODE_REVIEW.md
+.agents/
+.github/copilot-instructions.md
 .github/skills/

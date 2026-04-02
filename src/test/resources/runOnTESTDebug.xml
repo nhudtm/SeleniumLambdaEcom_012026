@@ -18,7 +18,7 @@
         <parameter name="browserName" value="chrome"/>
         <parameter name="env" value="local"/>
         <classes>
-                                   <class name="tests.TC_Blog"/>
+                                   <class name="tests.TC_WishList"/>
             <!-- <class name="tests.TC_Filter_ProductCategory"/>
                                    <class name="tests.TC_ProductDetail_2"/>
             <class name="tests.TC_Pagination"/> -->

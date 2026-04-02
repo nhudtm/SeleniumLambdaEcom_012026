@@ -32,6 +32,7 @@
             <class name="tests.TC_Pagination"/>
             <class name="tests.TC_WishList"/>
              <class name="tests.TC_ProductCategory"/>
+             <class name="tests.TC_Blog"/>
         </classes>
     </test>
     <test name="Run on Headless Firefox">

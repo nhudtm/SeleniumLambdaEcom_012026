@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
-<suite name="Lambda Ecommerce - TC_Blog Temp" parallel="false">
+<suite name="Lambda Ecommerce - Wishlist Module" parallel="false">
     <listeners>
         <listener class-name="reportConfig.AllureTestListener"/>
         <listener class-name="listeners.AnnotationTransformer"/>
@@ -8,11 +8,11 @@
 
     <parameter name="url" value="https://ecommerce-playground.lambdatest.io"/>
 
-    <test name="Run TC_Blog on Headless Chrome">
+    <test name="Run TC_WishListModule on Headless Chrome">
         <parameter name="browserName" value="chrome"/>
         <parameter name="env" value="local"/>
         <classes>
-            <class name="tests.TC_Blog"/>
+            <class name="tests.TC_WishListModule"/>
         </classes>
     </test>
 </suite>

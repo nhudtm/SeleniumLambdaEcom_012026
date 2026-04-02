@@ -15,6 +15,7 @@ public class MenuCategoryUI {
     public static final String COMPARE_ICON = "xpath=//div[@id='entry_217823']//a[@aria-label='Compare']";
     public static final String CART_ICON = "xpath=//div[@id='entry_217825']//div[@class='cart-icon']";
     public static final String WISHLIST_ICON = "xpath=//div[@id='entry_217824']//a[@aria-label='Wishlist']";
+    public static final String WISHLIST_ICON_FALLBACK = "xpath=(//a[contains(@href,'route=account/wishlist') and not(contains(@href,'success'))])[1]";
     public static final String All_CATEGORIES_CHILD = "xpath=//div[contains(@class,'dropdown-menu-left show')]//a";
 
 

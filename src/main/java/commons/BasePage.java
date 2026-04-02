@@ -688,11 +688,11 @@ public class BasePage {
         ((JavascriptExecutor) driver).executeScript("arguments[0].setAttribute('style', arguments[1])", getElement(  castParameter(locator, params)), originalStyle);
     }
     public void clickToElementByJS( String locator) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", getElement(  locator));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", getElement(locator));
     }
 
     public void clickToElementByJS( String locator, String ... params) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", getElement(  castParameter(locator, params)));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", getElement(castParameter(locator, params)));
     }
 
     public void clickToElementByJS( WebElement element) {

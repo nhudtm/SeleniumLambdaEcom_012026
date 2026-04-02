@@ -47,7 +47,7 @@ public class MenuCategoryPO extends BasePage {
         return PageGenerator.getAddOnsWidgetPage(driver);
     }
 
-    @Step("Click to 'Blog' menu item")
+     @Step("Click to 'Blog' menu item")
     public MyAccountPO clickWishListIconWithoutLogin() {
         waitForElementClickable(MenuCategoryUI.WISHLIST_ICON);
         clickToElement(MenuCategoryUI.WISHLIST_ICON);
